@@ -1,21 +1,26 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import { omit } from 'lodash'
+import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { registerAccount } from 'src/apis/auth.api'
+import Button from 'src/components/Button'
 import Input from 'src/components/Input'
-import { ResponseApi } from 'src/types/utils.type'
+import { AppContext } from 'src/contexts/app.contexts'
+import { ErrorResponse } from 'src/types/utils.type'
 import { getRules, schema, Schema } from 'src/utils/rules'
 import { isAxiosUnprocessableEntityError } from 'src/utils/util'
 
 type FormData = Schema
 
 export default function Register() {
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
+  const navigate = useNavigate()
+
   const {
     register,
     handleSubmit,
-    getValues,
     setError,
 
     formState: { errors }
@@ -39,19 +44,30 @@ export default function Register() {
   //-------------------------------------
   //  thằng handleSubmit nhận vào 1 cái Valid và InValid?
   const onSubmit = handleSubmit((data) => {
-    console.log(data)
-
     const body = omit(data, ['confirm_password'])
-
     registerAccountMutation.mutate(body, {
       onSuccess: (data) => {
-        console.log(data)
+        setIsAuthenticated(true)
+        // navigate đươc dùng để điều hướng (in case này là tới thằng /)
+        setProfile(data.data.data?.user)
+        navigate('/')
       },
       onError: (error) => {
-        if (isAxiosUnprocessableEntityError<ResponseApi<Omit<FormData, 'confirm_password'>>>(error)) {
+        console.log('errros:', error)
+
+        //  khi mà server trả về đó là 1 cái response lỗi nên là dùng generic định dạng lỗi truyền vào
+        if (isAxiosUnprocessableEntityError<ErrorResponse<Omit<FormData, 'confirm_password'>>>(error)) {
+          console.log(error.response)
+
+          // chỗ nảy ra được
+          // email: email không tồn tại
           const formError = error.response?.data.data
+          console.log(formError)
+
           if (formError) {
             Object.keys(formError).forEach((key) => {
+              console.log(key)
+
               setError(key as keyof Omit<FormData, 'confirm_password'>, {
                 message: formError[key as keyof Omit<FormData, 'confirm_password'>],
                 type: 'Server'
@@ -74,7 +90,6 @@ export default function Register() {
       }
     })
   })
-  console.log('errros:', errors)
 
   return (
     <div className='bg-orange'>
@@ -112,9 +127,13 @@ export default function Register() {
                 autoComplete='on'
               />
               <div className='mt-2'>
-                <button className='w-full text-center py-4 px-2 uppercase bg-red-500 text-white text-sm hover:bg-red-600'>
+                <Button
+                  className='w-full text-center py-4 px-2 uppercase bg-red-500 text-white text-sm hover:bg-red-600 flex justify-center items-center'
+                  isLoading={true || registerAccountMutation.isPending}
+                  disabled={registerAccountMutation.isPending}
+                >
                   Đăng Ký
-                </button>
+                </Button>
               </div>
               <div className='mt-8 '>
                 <div className='flex items-center justify-center'>
