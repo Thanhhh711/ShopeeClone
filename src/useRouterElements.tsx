@@ -11,6 +11,7 @@ import path from '../src/constants/path'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
+  //  nếu có token thì khỏi phải login
   return isAuthenticated ? <Outlet /> : <Navigate to={'/login'} />
 }
 
@@ -23,23 +24,6 @@ function RejectedRoute() {
 export default function useRouterElements() {
   // nó là mảng nha
   const routeElements = useRoutes([
-    {
-      path: '',
-
-      element: <ProtectedRoute />,
-      children: [
-        {
-          path: path.profile,
-          index: true, // để tránh nó kh find được gòi lại rơi vào vòng lặp vô hạn
-          element: (
-            <MainLayout>
-              <Profile />
-            </MainLayout>
-          )
-        }
-      ]
-    },
-
     {
       path: '',
       element: <RejectedRoute />,
@@ -59,6 +43,21 @@ export default function useRouterElements() {
             <RegisterLayout>
               <Register />
             </RegisterLayout>
+          )
+        }
+      ]
+    },
+    {
+      path: '',
+      element: <ProtectedRoute />,
+      children: [
+        {
+          path: path.profile,
+          index: true, // để tránh nó kh find được gòi lại rơi vào vòng lặp vô hạn
+          element: (
+            <MainLayout>
+              <Profile />
+            </MainLayout>
           )
         }
       ]

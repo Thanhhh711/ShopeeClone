@@ -43,6 +43,7 @@ export default function Login() {
         // navigate đươc dùng để điều hướng (in case này là tới thằng /)
 
         setProfile(data.data.data?.user)
+        // dấu / đại diện trang hiện tại
         navigate('/')
       },
       onError: (error) => {
@@ -96,7 +97,7 @@ export default function Login() {
               <div className='mt-3'>
                 <Button
                   className='w-full text-center py-4 px-2 uppercase bg-red-500 text-white text-sm hover:bg-red-600 flex justify-center items-center'
-                  isLoading={true || loginMutation.isPending}
+                  isLoading={loginMutation.isPending}
                   disabled={loginMutation.isPending}
                 >
                   Đăng nhập

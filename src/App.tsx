@@ -6,6 +6,8 @@ function App() {
   return (
     <div>
       {routerElements}
+
+      {/*  dùng để thể hiện lỗi linh tinh */}
       <ToastContainer />
     </div>
   )
