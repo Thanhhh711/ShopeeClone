@@ -26,5 +26,8 @@ module.exports = {
         }
       })
     })
+    //  thằng này phải cài nha truncate mutiple-line (tailwind)
+    //  giúp đoạn chữ quá dài thì chúng ta sẽ cho 3 chấm
+    // require('@tailwindcss/line-clamp')
   ]
 }
