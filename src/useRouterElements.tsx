@@ -1,5 +1,9 @@
 import React, { useContext } from 'react'
-import { Navigate, Outlet, useRoutes } from 'react-router-dom'
+import {
+  Navigate,
+  Outlet,
+  useRoutes
+} from 'react-router-dom'
 import ProductList from './pages/ProductList'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -12,13 +16,21 @@ import path from '../src/constants/path'
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
   //  nếu có token thì khỏi phải login
-  return isAuthenticated ? <Outlet /> : <Navigate to={'/login'} />
+  return isAuthenticated ? (
+    <Outlet />
+  ) : (
+    <Navigate to={'/login'} />
+  )
 }
 
 function RejectedRoute() {
   //  hàm này dùng cho là khi đã login rồi thì không cho login| regis nưa
   const { isAuthenticated } = useContext(AppContext)
-  return !isAuthenticated ? <Outlet /> : <Navigate to={'/'} />
+  return !isAuthenticated ? (
+    <Outlet />
+  ) : (
+    <Navigate to={'/'} />
+  )
 }
 //  nơi đây sẽ cấu hình phân trang
 export default function useRouterElements() {
