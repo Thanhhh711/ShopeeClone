@@ -8,6 +8,7 @@ import productApi from 'src/apis/product.api'
 
 import { ProductListConfig } from 'src/types/product.type'
 import Pagination from 'src/components/Pagination'
+import categoryApi from 'src/apis/category.api'
 
 export type QueryConfig = {
   [key in keyof ProductListConfig]: string
@@ -30,7 +31,8 @@ export default function ProductList() {
       order: queryParams.order,
       price_max: queryParams.price_max,
       price_min: queryParams.price_min,
-      rating_filter: queryParams.rating_filter
+      rating_filter: queryParams.rating_filter,
+      category: queryParams.category
 
       //  nó là string nha (dữ liệu lấy xuống)
     },
@@ -40,7 +42,7 @@ export default function ProductList() {
   //  thằng này (queryKey )lắng nghe sự thanh đổi trên url
   //  thì sau đó nó sẽ gọi lại Api thì từ đó chúng ta được
   //  kết quả mới
-  const { data } = useQuery({
+  const { data: productData } = useQuery({
     queryKey: ['products', queryParams],
     queryFn: () => {
       return productApi.getProducts(
@@ -54,42 +56,56 @@ export default function ProductList() {
     //  thằng này
   })
 
-  console.log(data)
+  //------------------------------
+  const { data: categoriesData } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => {
+      return categoryApi.getCategories()
+    }
+    //  đâu có chuyển trang ha gì đâu mà cần keep
+  })
 
   return (
     <div className='bg-gray-200 py-6'>
       <div className='container'>
-        {data && (
+        {productData && (
           <div className='grid grid-cols-12 gap-6'>
             <div className='col-span-3'>
               {/*  đây là phần đánh giá  */}
-              <AsideFilter />
+              <AsideFilter
+                //  tại sao mình truyền queryConfig
+                //  do là mình chỉ muốn là lấy sản phẩm ra thôi chứ không muốn chuyển trang
+                queryConfig={queryConfig}
+                categories={categoriesData?.data.data || []}
+              />
             </div>
             <div className='col-span-9'>
               {/*  đây là phần  sặp xếp sản phẩm  */}
               <SortProductList
                 queryConfig={queryConfig}
                 pageSize={
-                  data.data.data.pagination.page_size
+                  productData.data.data.pagination.page_size
                 }
               />
               <div className='mt-6 grid gird-cols-2  gap-3  md:grid-cols-3 lg:gird-cols-4 xl:gird-cols-5'>
                 {/*  do mới vào Array là empty nên chúng ta cần phải fill(điền giá trị 0 cho tụi nó để lấy index) */}
 
-                {data.data.data.products.map((product) => (
-                  <div
-                    className='col-span-1'
-                    key={product._id}
-                  >
-                    <Product product={product} />
-                  </div>
-                ))}
+                {productData.data.data.products.map(
+                  (product) => (
+                    <div
+                      className='col-span-1'
+                      key={product._id}
+                    >
+                      <Product product={product} />
+                    </div>
+                  )
+                )}
               </div>
 
               <Pagination
                 queryConfig={queryConfig}
                 pageSize={
-                  data.data.data.pagination.page_size
+                  productData.data.data.pagination.page_size
                 }
               />
             </div>

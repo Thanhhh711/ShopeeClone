@@ -105,7 +105,7 @@ export default function Pagination({
         return (
           <Link
             to={{
-              pathname: path.home,
+              pathname: path.profile,
               search: createSearchParams({
                 ...queryConfig,
                 page: pageNumber.toString()
@@ -135,7 +135,7 @@ export default function Pagination({
       ) : (
         <Link
           to={{
-            pathname: path.home,
+            pathname: path.profile,
             search: createSearchParams({
               ...queryConfig,
               page: (page - 1).toString()
@@ -160,7 +160,7 @@ export default function Pagination({
         // còn dùng button or navigate thì không dùng đc như z
         <Link
           to={{
-            pathname: path.home,
+            pathname: path.profile,
             // thằng này giúp này giúp chúng ta tạo searchParams
             // để trên url nó giúp chúng ta đồng bộ khi chuyển trang
             search: createSearchParams({

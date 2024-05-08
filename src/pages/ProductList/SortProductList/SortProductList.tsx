@@ -47,7 +47,7 @@ export default function SortProductList({
     >
   ) => {
     navigate({
-      pathname: path.home,
+      pathname: path.profile,
       search: createSearchParams(
         //  tại sao chúng ta phải sử dụng omit trong trường hợp này
         //  do là khi mà chúng ta bấm phổ biến thì nó phải sắp xếp từ
@@ -73,7 +73,7 @@ export default function SortProductList({
     >
   ) => {
     navigate({
-      pathname: path.home,
+      pathname: path.profile,
       search: createSearchParams({
         ...queryConfig,
         sort_by: sortBy.price,
