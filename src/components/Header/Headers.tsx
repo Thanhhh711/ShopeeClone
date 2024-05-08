@@ -142,6 +142,8 @@ export default function Headers() {
             </div>
           )}
         </div>
+
+        {/* --------------------------------------------------------------- */}
         {/*  gap khoảng cách giữa các phần tử  1 rem*/}
         <div className='grid grid-cols-12 gap-4 mt-4 items-end'>
           {/* logo */}

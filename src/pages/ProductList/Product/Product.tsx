@@ -38,7 +38,9 @@ export default function Product({ product }: Props) {
             </div>
             <div className='text-orange truncate ml-1'>
               <span className='text-xs'>đ</span>
-              <span>{fomatCurrency(product.price)}</span>
+              <span className='text-sm'>
+                {fomatCurrency(product.price)}
+              </span>
             </div>
           </div>
 

@@ -105,7 +105,7 @@ export default function Pagination({
         return (
           <Link
             to={{
-              pathname: path.profile,
+              pathname: path.home,
               search: createSearchParams({
                 ...queryConfig,
                 page: pageNumber.toString()
@@ -135,7 +135,7 @@ export default function Pagination({
       ) : (
         <Link
           to={{
-            pathname: path.profile,
+            pathname: path.home,
             search: createSearchParams({
               ...queryConfig,
               page: (page - 1).toString()
@@ -154,9 +154,15 @@ export default function Pagination({
           Next
         </span>
       ) : (
+        //  tại sao chúng ta ưu tiên thẻ Link hơn là button
+        //  chúng ta có thể thấy được url
+        // or chúng ta có thể open Link in new Tab
+        // còn dùng button or navigate thì không dùng đc như z
         <Link
           to={{
-            pathname: path.profile,
+            pathname: path.home,
+            // thằng này giúp này giúp chúng ta tạo searchParams
+            // để trên url nó giúp chúng ta đồng bộ khi chuyển trang
             search: createSearchParams({
               ...queryConfig,
               page: (page + 1).toString()

@@ -54,6 +54,8 @@ export default function ProductList() {
     //  thằng này
   })
 
+  console.log(data)
+
   return (
     <div className='bg-gray-200 py-6'>
       <div className='container'>
@@ -65,7 +67,12 @@ export default function ProductList() {
             </div>
             <div className='col-span-9'>
               {/*  đây là phần  sặp xếp sản phẩm  */}
-              <SortProductList />
+              <SortProductList
+                queryConfig={queryConfig}
+                pageSize={
+                  data.data.data.pagination.page_size
+                }
+              />
               <div className='mt-6 grid gird-cols-2  gap-3  md:grid-cols-3 lg:gird-cols-4 xl:gird-cols-5'>
                 {/*  do mới vào Array là empty nên chúng ta cần phải fill(điền giá trị 0 cho tụi nó để lấy index) */}
 
