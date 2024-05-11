@@ -28,11 +28,7 @@ export default function ProductList() {
       sort_by: queryParams.sort_by,
       exclude: queryParams.exclude,
       name: queryParams.name,
-      order: queryParams.order,
-      price_max: queryParams.price_max,
-      price_min: queryParams.price_min,
-      rating_filter: queryParams.rating_filter,
-      category: queryParams.category
+      order: queryParams.order
 
       //  nó là string nha (dữ liệu lấy xuống)
     },
@@ -53,6 +49,7 @@ export default function ProductList() {
     //  có nghĩa là ma chuyển trang: thì  thằng data sẽ bi set là undefined, điều này dẫn đến
     //  trang bị giật khi chuyển nên mình sẽ sử dụng thằng này để giữ lại data trước đó tránh bi giật
     keepPreviousData: true // hoặc false tùy theo yêu cầu của bạn
+
     //  thằng này
   })
 

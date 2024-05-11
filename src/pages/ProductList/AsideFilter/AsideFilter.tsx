@@ -14,6 +14,8 @@ import { useForm, Controller } from 'react-hook-form'
 import { schema, Schema } from 'src/utils/rules'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { NoUndefinedField } from 'src/types/utils.type'
+import RatingStart from 'src/pages/RatingStart'
+import { omit } from 'lodash'
 
 interface Props {
   queryConfig: QueryConfig
@@ -47,6 +49,7 @@ export default function AsideFilter({
     control,
     handleSubmit,
     trigger, // trigger này giúp chúng ta sử lý validate
+    reset,
     formState: { errors }
   } = useForm<FormData>({
     // chúng ta nên set cái defaultValues
@@ -75,6 +78,22 @@ export default function AsideFilter({
       }).toString()
     })
   })
+
+  const handleRemoveAll = () => {
+    reset()
+
+    navigate({
+      pathname: path.profile,
+      search: createSearchParams(
+        omit(queryConfig, [
+          'price_min',
+          'price_max',
+          'rating_filter',
+          'category'
+        ])
+      ).toString()
+    })
+  }
 
   return (
     <div className='py-4'>
@@ -184,12 +203,14 @@ export default function AsideFilter({
                   <InputNumber
                     type='text'
                     className='grow'
-                    name='form'
                     placeholer='Đ-từ'
                     classNameInput='p-1 w-full outline-none border border-gray-300 focus:border-gray-500 focus:shawdow-sm rounded-sm'
                     //  do là cái onChange này nó chúng ta qui định nó xuất ra event
                     // onChange={(event) =>
                     //   field.onChange(event)
+                    {...field}
+                    // value={field.value}
+                    // ref={field.ref}
                     onChange={(event) => {
                       field.onChange(event)
                       // nếu chúng ta dùng trigger kiểu này
@@ -198,9 +219,9 @@ export default function AsideFilter({
                       trigger('price_max') // z là nó chỉ validate đến thằng pricemaxx
                     }}
                     // là giá trị của chúng ta khi mà nhập vào
-                    value={field.value}
-                    // do chúng ta đã chuyển qua dungf ref nên chúng ta dễ dàng forcus vào lỗi (185)
-                    ref={field.ref}
+                    // value={field.value}
+                    // // do chúng ta đã chuyển qua dungf ref nên chúng ta dễ dàng forcus vào lỗi (185)
+                    // ref={field.ref}
                     classNameError='hidden' // do mún hiện lổi
                   />
                 )
@@ -223,12 +244,14 @@ export default function AsideFilter({
                   <InputNumber
                     type='text'
                     className='grow'
-                    name='form'
                     placeholer='Đ-đến'
                     classNameInput='p-1 w-full outline-none border border-gray-300 focus:border-gray-500 focus:shawdow-sm rounded-sm'
                     //  do là cái onChange này nó chúng ta qui định nó xuất ra event
                     // onChange={(event) =>
                     //   field.onChange(event)
+                    {...field}
+                    // value={field.value}
+                    // ref={field.ref}
                     onChange={(event) => {
                       field.onChange(event)
                       // nếu chúng ta dùng trigger kiểu này
@@ -236,8 +259,6 @@ export default function AsideFilter({
                       //
                       trigger('price_min') // z là nó chỉ validate đến thằng pricemin
                     }}
-                    value={field.value}
-                    ref={field.ref}
                   />
                 )
               }}
@@ -251,114 +272,17 @@ export default function AsideFilter({
 
       <div className='text-sm'>Đánh giá </div>
 
-      <ul className='my-3 flex-warp'>
-        <Link to='' className='flex  items-center text-sm'>
-          {Array(5)
-            .fill(0)
-            .map((_, index) => (
-              <svg
-                viewBox='0 0 9.5 8'
-                className='w-4 h-4 mr-1'
-                key={index}
-              >
-                <defs>
-                  <linearGradient
-                    id='ratingStarGradient'
-                    x1='50%'
-                    x2='50%'
-                    y1='0%'
-                    y2='100%'
-                  >
-                    <stop offset={0} stopColor='#ffca11' />
-                    <stop offset={1} stopColor='#ffad27' />
-                  </linearGradient>
-                  <polygon
-                    id='ratingStar'
-                    points='14.910357 6.35294118 12.4209136 7.66171903 12.896355 4.88968305 10.8823529 2.92651626 13.6656353 2.52208166 14.910357 0 16.1550787 2.52208166 18.9383611 2.92651626 16.924359 4.88968305 17.3998004 7.66171903'
-                  />
-                </defs>
-                <g
-                  fill='url(#ratingStarGradient)'
-                  fillRule='evenodd'
-                  stroke='none'
-                  strokeWidth={1}
-                >
-                  <g transform='translate(-876 -1270)'>
-                    <g transform='translate(155 992)'>
-                      <g transform='translate(600 29)'>
-                        <g transform='translate(10 239)'>
-                          <g transform='translate(101 10)'>
-                            <use
-                              stroke='#ffa727'
-                              strokeWidth='.5'
-                              xlinkHref='#ratingStar'
-                            />
-                          </g>
-                        </g>
-                      </g>
-                    </g>
-                  </g>
-                </g>
-              </svg>
-            ))}
-          <span>Trở lên </span>
-        </Link>
-        <Link to='' className='flex  items-center text-sm'>
-          {Array(5)
-            .fill(0)
-            .map((_, index) => (
-              <svg
-                viewBox='0 0 9.5 8'
-                className='w-4 h-4 mr-1'
-                key={index}
-              >
-                <defs>
-                  <linearGradient
-                    id='ratingStarGradient'
-                    x1='50%'
-                    x2='50%'
-                    y1='0%'
-                    y2='100%'
-                  >
-                    <stop offset={0} stopColor='#ffca11' />
-                    <stop offset={1} stopColor='#ffad27' />
-                  </linearGradient>
-                  <polygon
-                    id='ratingStar'
-                    points='14.910357 6.35294118 12.4209136 7.66171903 12.896355 4.88968305 10.8823529 2.92651626 13.6656353 2.52208166 14.910357 0 16.1550787 2.52208166 18.9383611 2.92651626 16.924359 4.88968305 17.3998004 7.66171903'
-                  />
-                </defs>
-                <g
-                  fill='url(#ratingStarGradient)'
-                  fillRule='evenodd'
-                  stroke='none'
-                  strokeWidth={1}
-                >
-                  <g transform='translate(-876 -1270)'>
-                    <g transform='translate(155 992)'>
-                      <g transform='translate(600 29)'>
-                        <g transform='translate(10 239)'>
-                          <g transform='translate(101 10)'>
-                            <use
-                              stroke='#ffa727'
-                              strokeWidth='.5'
-                              xlinkHref='#ratingStar'
-                            />
-                          </g>
-                        </g>
-                      </g>
-                    </g>
-                  </g>
-                </g>
-              </svg>
-            ))}
-          <span>Trở lên </span>
-        </Link>
-      </ul>
+      <RatingStart queryConfig={queryConfig} />
       <div className='bg-gray-300 h-[1px] my-4' />
-      <Button className='w-full p-2 uppercase bg-orange text-white text-sm hover:bg-orange/80 flex justify-center items-center'>
+
+      <div
+        onClick={handleRemoveAll}
+        className='w-full p-2 uppercase bg-orange text-white text-sm hover:bg-orange/80 flex justify-center items-center'
+        role='button'
+        aria-hidden='true'
+      >
         Xóa tất cả
-      </Button>
+      </div>
     </div>
   )
 }
