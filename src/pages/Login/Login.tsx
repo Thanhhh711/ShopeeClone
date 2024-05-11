@@ -14,8 +14,9 @@ import { isAxiosUnprocessableEntityError } from 'src/utils/util'
 
 //  do là login mình đâu cần thằng này
 // type FormData = Schema
-type FormData = Omit<Schema, 'confirm_password'>
-const loginSchema = schema.omit(['confirm_password'])
+//  pick(chọn) thì trái lại với omit(loại)
+type FormData = Pick<Schema, 'email' | 'password'>
+const loginSchema = schema.pick(['email', 'password'])
 
 export default function Login() {
   const { setIsAuthenticated, setProfile } =

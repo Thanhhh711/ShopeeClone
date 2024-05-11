@@ -39,6 +39,7 @@ export default function Pagination({
   const renderPagination = () => {
     let dotAfter = false
     let dotBefore = false
+
     const renderDotBefore = (index: number) => {
       if (!dotBefore) {
         dotBefore = true

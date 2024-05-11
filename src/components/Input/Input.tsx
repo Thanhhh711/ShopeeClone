@@ -15,30 +15,26 @@ interface Props
 }
 
 export default function Input({
-  type,
   errorMessage,
-  placeholer,
   className,
-  autoComplete,
   name,
   rules,
   register,
   classNameInput = 'p-3 w-full outline-none border border-gray-300 forcus:border-gray-500 forcus:shawdow-sm rounded-sm',
-  classNameError = 'mt-1 text-red-600 min-h-[1.25rem] text-sm'
+  classNameError = 'mt-1 text-red-600 min-h-[1.25rem] text-sm',
+  ...rest
 }: Props) {
   const registerResult =
     register && name ? register(name, rules) : {}
   return (
     <div className={className}>
       <input
-        type={type}
         //  tại sao bị như z
         // nó bị overwritte
         // name='email'
         className={classNameInput}
-        placeholder={placeholer}
-        autoComplete={autoComplete}
         {...registerResult}
+        {...rest}
       />
       <div className={classNameError}>{errorMessage}</div>
     </div>
