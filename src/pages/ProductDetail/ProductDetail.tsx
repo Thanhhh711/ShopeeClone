@@ -1,15 +1,16 @@
 import { useQuery } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import productApi from 'src/apis/product.api'
 import InputNumber from 'src/components/InputNumber'
 import ProductRating from 'src/components/ProductRating'
 import { Product } from 'src/types/product.type'
-import { FormatNumberToSocialStyle, fomatCurrency, rateSale } from 'src/utils/util'
+import { FormatNumberToSocialStyle, fomatCurrency, getIdFromNameId, rateSale } from 'src/utils/util'
 
 export default function ProductDetail() {
-  const { id } = useParams()
+  const { nameId } = useParams()
+  const id = getIdFromNameId(nameId as string)
   console.log(id)
 
   const { data: productDetailData } = useQuery({
@@ -23,6 +24,9 @@ export default function ProductDetail() {
   const [activeImages, setActiveImages] = useState('')
   //  3 chấm ở dưới nó sẽ loại bỏ đi dấu []
   const product = productDetailData?.data.data
+
+  // nay dom hinhf nha
+  const imagesRef = useRef<HTMLImageElement>(null)
 
   //  tại sao dùng useMemo(hạn chế tính toán) là do chúng ta cũng currentIndexImages
   //  thằng nó bị set thì nó phải re-Render điều này thật sự không hay lắm
@@ -56,7 +60,35 @@ export default function ProductDetail() {
       setCurrentIndexImages((prev) => [prev[0] - 1, prev[1] - 1])
     }
   }
+  const handleZoom = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    // lấy possion nè
+    const rect = event.currentTarget.getBoundingClientRect()
 
+    const image = imagesRef.current as HTMLImageElement
+    const { naturalHeight, naturalWidth } = image
+    // Cách 1: Lấy offsetX, offsetY đơn giản khi chúng ta đã xử lý được bubble event
+    // const { offsetX, offsetY } = event.nativeEvent
+
+    // Cách 2: Lấy offsetX, offsetY khi chúng ta không xử lý được bubble event
+    const offsetX = event.pageX - (rect.x + window.scrollX)
+    const offsetY = event.pageY - (rect.y + window.scrollY)
+
+    const top = offsetY * (1 - naturalHeight / rect.height)
+    const left = offsetX * (1 - naturalWidth / rect.width)
+    // muốn zoom được hình thì mình phải lấy được độ cao vs chiều dai ban đầu
+    image.style.width = naturalWidth + 'px'
+    image.style.height = naturalHeight + 'px'
+    image.style.maxWidth = 'unset'
+    image.style.top = top + 'px'
+    image.style.left = left + 'px'
+
+    // Event bubble(hình bị bắn) (189)
+    // do đây là cái lỗi khi mà các sự kiện bị chồng lên nhau
+  }
+
+  const handleRemoveZoom = () => {
+    imagesRef.current?.removeAttribute('style')
+  }
   return (
     // có product thi mới hiên
     product && (
@@ -66,17 +98,18 @@ export default function ProductDetail() {
             <div className='grid grid-cols-12 gap-9'>
               {/*  bên đây render ra hình */}
               <div className='col-span-5'>
-                {/*  cái relative này giúp chúng ta canh chỉnh ản có chiều cao bằng với chiêu rộngk */}
-                <div className='relative w-full pt-[100%] shadow'>
+                <div
+                  className='relative w-full cursor-zoom-in overflow-hidden pt-[100%] shadow cursor-zoom-in'
+                  onMouseMove={handleZoom}
+                  onMouseLeave={handleRemoveZoom}
+                >
                   <img
                     src={activeImages}
                     alt={product.name}
-                    className='absolute top-0 left-0 bg-white w-full h-full object-cover'
+                    className='absolute pointer-events-none top-0 left-0 h-full w-full bg-white object-cover'
+                    ref={imagesRef}
                   />
                 </div>
-
-                {/*  render ra các hình nhỏ */}
-                {/*  render ra mũi tên */}
                 <div className='relative mt-4 grid grid-cols-5 gap-1'>
                   <button
                     className='absolute left-0 top-1/2 z-10 h-9 w-5 -translate-y-1/2 bg-black/20 text-white'
@@ -88,16 +121,11 @@ export default function ProductDetail() {
                       viewBox='0 0 24 24'
                       strokeWidth={1.5}
                       stroke='currentColor'
-                      className='w-5 h-5'
+                      className='h-5 w-5'
                     >
-                      <path strokeLinecap='round' strokeLinejoin='round' d='M15.75 19.5 8.25 12l7.5-7.5' />
+                      <path strokeLinecap='round' strokeLinejoin='round' d='M15.75 19.5L8.25 12l7.5-7.5' />
                     </svg>
                   </button>
-                  {/*  trong cái list img của chúng ta có nhiều hình mà
-                      nên là chúng ta chỉ muốn lấy 5 thằng đầu thôi, chúng ta dùng slice để lấy nhé
-                      // slice nó không tính thằng cuối cùng nển là chúng ta phải tới 5
-
-                  */}
                   {currentImages.map((img) => {
                     const isActive = img === activeImages
                     return (
@@ -105,9 +133,8 @@ export default function ProductDetail() {
                         <img
                           src={img}
                           alt={product.name}
-                          className='absolute top-0 left-0 bg-white w-full h-full object-cover'
+                          className='absolute top-0 left-0 h-full w-full cursor-pointer bg-white object-cover'
                         />
-                        {/* */}
                         {isActive && <div className='absolute inset-0 border-2 border-orange' />}
                       </div>
                     )
@@ -122,9 +149,9 @@ export default function ProductDetail() {
                       viewBox='0 0 24 24'
                       strokeWidth={1.5}
                       stroke='currentColor'
-                      className='w-5 h-5'
+                      className='h-5 w-5'
                     >
-                      <path strokeLinecap='round' strokeLinejoin='round' d='m8.25 4.5 7.5 7.5-7.5 7.5' />
+                      <path strokeLinecap='round' strokeLinejoin='round' d='M8.25 4.5l7.5 7.5-7.5 7.5' />
                     </svg>
                   </button>
                 </div>
