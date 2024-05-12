@@ -22,6 +22,8 @@ export default function Input({
   register,
   classNameInput = 'p-3 w-full outline-none border border-gray-300 forcus:border-gray-500 forcus:shawdow-sm rounded-sm',
   classNameError = 'mt-1 text-red-600 min-h-[1.25rem] text-sm',
+
+  placeholder,
   ...rest
 }: Props) {
   const registerResult =
@@ -35,6 +37,7 @@ export default function Input({
         className={classNameInput}
         {...registerResult}
         {...rest}
+        placeholder={placeholder}
       />
       <div className={classNameError}>{errorMessage}</div>
     </div>

@@ -1,6 +1,8 @@
 import { User } from 'src/types/user.type'
 
-export const saveAccessTokenToLS = (accessToken: string) => {
+export const saveAccessTokenToLS = (
+  accessToken: string
+) => {
   localStorage.setItem('access_token', accessToken)
 }
 
@@ -9,7 +11,8 @@ export const clearLS = () => {
   localStorage.removeItem('profile')
 }
 
-export const getAccessTokenFormLS = () => localStorage.getItem('access_token') || ''
+export const getAccessTokenFormLS = () =>
+  localStorage.getItem('access_token') || ''
 
 export const getProfileFromLS = () => {
   //  lấy xuống là string

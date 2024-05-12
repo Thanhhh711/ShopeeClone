@@ -33,7 +33,7 @@ export default function Register() {
 
     formState: { errors }
   } = useForm<FormData>({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(registerSchema)
   })
 
   const registerAccountMutation = useMutation({
@@ -54,12 +54,14 @@ export default function Register() {
   //-------------------------------------
   //  thằng handleSubmit nhận vào 1 cái Valid và InValid?
   const onSubmit = handleSubmit((data) => {
+    console.log(data)
+
     const body = omit(data, ['confirm_password'])
     registerAccountMutation.mutate(body, {
       onSuccess: (data) => {
         setIsAuthenticated(true)
         // navigate đươc dùng để điều hướng (in case này là tới thằng /)
-        setProfile(data.data.data?.user)
+        setProfile(data.data.data.user)
         navigate('/')
       },
       onError: (error) => {
@@ -122,7 +124,7 @@ export default function Register() {
   return (
     <div className='bg-orange'>
       <div className='container'>
-        <div className='gird gird-cols-1 lg:gird-cols-5 py-12 lg:py-32 lg:pr-10'>
+        <div className='grid grid-cols-1 py-12 lg:grid-cols-5 lg:py-32 lg:pr-10'>
           <div className='lg:col-span-2 lg:col-start-4'>
             <form
               className='p-10 rounded bg-white shadow-sm'

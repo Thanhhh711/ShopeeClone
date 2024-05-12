@@ -79,8 +79,8 @@ export default function Login() {
 
   return (
     <div className='bg-orange'>
-      <div className='max-w-7xl mx-auto px-4'>
-        <div className='gird gird-cols-1 lg:gird-cols-5 py-12 lg:py-32 lg:pr-10'>
+      <div className='container'>
+        <div className='grid grid-cols-1 py-12 lg:grid-cols-5 lg:py-32 lg:pr-10'>
           <div className='lg:col-span-2 lg:col-start-4'>
             <form
               className='p-10 rounded bg-white shadow-sm'
@@ -90,7 +90,7 @@ export default function Login() {
               <Input
                 name='email'
                 type='email'
-                placeholer='email'
+                placeholder='email'
                 className='mt-8'
                 register={register}
                 errorMessage={errors.email?.message}
@@ -98,8 +98,8 @@ export default function Login() {
               <Input
                 name='password'
                 type='password'
-                placeholer='password'
-                className='mt-3'
+                placeholder='password'
+                className='mt-1'
                 register={register}
                 errorMessage={errors.password?.message}
                 autoComplete='on'
