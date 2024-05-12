@@ -7,6 +7,8 @@ import RegisterLayout from './layouts/RegisterLayout'
 import Login from './pages/Login'
 import Profile from './pages/Profile'
 import Register from './pages/Register'
+import ProductList from './pages/ProductList/components'
+import ProductDetail from './pages/ProductDetail'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
@@ -61,6 +63,24 @@ export default function useRouterElements() {
           )
         }
       ]
+    },
+    {
+      path: path.productDetail,
+      index: true, // để tránh nó kh find được gòi lại rơi vào vòng lặp vô hạn
+      element: (
+        <MainLayout>
+          <ProductDetail />
+        </MainLayout>
+      )
+    },
+    {
+      path: '',
+      index: true, // để tránh nó kh find được gòi lại rơi vào vòng lặp vô hạn
+      element: (
+        <MainLayout>
+          <ProductList />
+        </MainLayout>
+      )
     }
   ])
   return routeElements

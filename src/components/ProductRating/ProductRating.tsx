@@ -1,9 +1,13 @@
 import React from 'react'
 
 export default function ProductRating({
-  rating
+  rating,
+  activeClassName = 'w-3 h-3 fill-yellow-300 text-yellow-300',
+  nonActiveClass = 'w-3 h-3 fill-current text-gray-300'
 }: {
   rating: number
+  activeClassName?: string
+  nonActiveClass?: string
 }) {
   const handleWidth = (order: number) => {
     if (order <= rating) {
@@ -28,13 +32,7 @@ export default function ProductRating({
               //  cái width này là ngôi sao màu vàng(nó đang đè lên sao xám)
               style={{ width: handleWidth(index + 1) }}
             >
-              <svg
-                enable-background='new 0 0 15 15'
-                viewBox='0 0 15 15'
-                x='0'
-                y='0'
-                className='w-3 h-3 fill-yellow-300 text-yellow-300'
-              >
+              <svg enable-background='new 0 0 15 15' viewBox='0 0 15 15' x='0' y='0' className={activeClassName}>
                 <polygon
                   points='7.5 .8 9.7 5.4 14.5 5.9 10.7 9.1 11.8 14.2 7.5 11.6 3.2 14.2 4.3 9.1 .5 5.9 5.3 5.4'
                   stroke-linecap='round'
@@ -43,13 +41,8 @@ export default function ProductRating({
                 ></polygon>
               </svg>
             </div>
-            <svg
-              enableBackground='new 0 0 15 15'
-              viewBox='0 0 15 15'
-              x={0}
-              y={0}
-              className='w-3 h-3 fill-current text-gray-300'
-            >
+            {/*  sao xám */}
+            <svg enableBackground='new 0 0 15 15' viewBox='0 0 15 15' x={0} y={0} className={nonActiveClass}>
               <polygon
                 points='7.5 .8 9.7 5.4 14.5 5.9 10.7 9.1 11.8 14.2 7.5 11.6 3.2 14.2 4.3 9.1 .5 5.9 5.3 5.4'
                 strokeLinecap='round'

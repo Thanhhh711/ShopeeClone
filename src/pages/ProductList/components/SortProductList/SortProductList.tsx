@@ -1,26 +1,17 @@
-import { sortBy } from 'src/constants/product'
-import { QueryConfig } from '../ProductList'
 import classNames from 'classnames'
-import { ProductListConfig } from 'src/types/product.type'
-import {
-  Link,
-  createSearchParams,
-  useNavigate
-} from 'react-router-dom'
-import { order as orderConstant } from 'src/constants/product'
-import path from 'src/constants/path'
 import { omit } from 'lodash'
-import { spawn } from 'child_process'
+import { Link, createSearchParams, useNavigate } from 'react-router-dom'
+import path from 'src/constants/path'
+import { order as orderConstant, sortBy } from 'src/constants/product'
+import { ProductListConfig } from 'src/types/product.type'
+import { QueryConfig } from '../ProductList'
 
 interface Props {
   queryConfig: QueryConfig
   pageSize: number
 }
 
-export default function SortProductList({
-  queryConfig,
-  pageSize
-}: Props) {
+export default function SortProductList({ queryConfig, pageSize }: Props) {
   const page = Number(queryConfig.page)
   //  nếu như sort_by không có trong queryConfig này thì chúng ta
   //  sẽ sử dụng thằng createAt
@@ -31,21 +22,11 @@ export default function SortProductList({
   //  thằng sort-by có thể sẽ là undefined là do mình đã ? lúc mình định dạng
   //  nên mình dùng thằng exclude này nó giông như là 1 cái thư viện để ép kiểu
   // chúng ta truyền vào undefined thì nó sẽ không còn undefined
-  const isActiveSortBy = (
-    sortByValue: Exclude<
-      ProductListConfig['sort_by'],
-      undefined
-    >
-  ) => {
+  const isActiveSortBy = (sortByValue: Exclude<ProductListConfig['sort_by'], undefined>) => {
     return sort_by === sortByValue
   }
 
-  const handleSort = (
-    sortByValue: Exclude<
-      ProductListConfig['sort_by'],
-      undefined
-    >
-  ) => {
+  const handleSort = (sortByValue: Exclude<ProductListConfig['sort_by'], undefined>) => {
     navigate({
       pathname: path.profile,
       search: createSearchParams(
@@ -66,12 +47,7 @@ export default function SortProductList({
     })
   }
 
-  const handlePriceOrder = (
-    orderValue: Exclude<
-      ProductListConfig['order'],
-      undefined
-    >
-  ) => {
+  const handlePriceOrder = (orderValue: Exclude<ProductListConfig['order'], undefined>) => {
     navigate({
       pathname: path.profile,
       search: createSearchParams({
@@ -88,58 +64,38 @@ export default function SortProductList({
         <div className='flex items-center flex-wrap gap-2'>
           <div className=''>Sắp xếp theo</div>
           <button
-            className={classNames(
-              'h-8 px-4 captilize text-sm  text-center',
-              {
-                'bg-orange text-white  hover:bg-orange/80':
-                  isActiveSortBy(sortBy.view),
-                'bg-white text-black  hover:bg-slate-100':
-                  !isActiveSortBy(sortBy.view)
-              }
-            )}
+            className={classNames('h-8 px-4 captilize text-sm  text-center', {
+              'bg-orange text-white  hover:bg-orange/80': isActiveSortBy(sortBy.view),
+              'bg-white text-black  hover:bg-slate-100': !isActiveSortBy(sortBy.view)
+            })}
             onClick={() => handleSort(sortBy.view)}
           >
             Phổ biến
           </button>
           <button
-            className={classNames(
-              'h-8 px-4 captilize text-sm  text-center  ',
-              {
-                'bg-orange text-white  hover:bg-orange/80':
-                  isActiveSortBy(sortBy.createdAt),
-                'bg-white text-black  hover:bg-slate-100':
-                  !isActiveSortBy(sortBy.createdAt)
-              }
-            )}
+            className={classNames('h-8 px-4 captilize text-sm  text-center  ', {
+              'bg-orange text-white  hover:bg-orange/80': isActiveSortBy(sortBy.createdAt),
+              'bg-white text-black  hover:bg-slate-100': !isActiveSortBy(sortBy.createdAt)
+            })}
             onClick={() => handleSort(sortBy.createdAt)}
           >
             Mới nhất
           </button>
           <button
-            className={classNames(
-              'h-8 px-4 captilize text-sm  text-center',
-              {
-                'bg-orange text-white  hover:bg-orange/80':
-                  isActiveSortBy(sortBy.sold),
-                'bg-white text-black  hover:bg-slate-100':
-                  !isActiveSortBy(sortBy.sold)
-              }
-            )}
+            className={classNames('h-8 px-4 captilize text-sm  text-center', {
+              'bg-orange text-white  hover:bg-orange/80': isActiveSortBy(sortBy.sold),
+              'bg-white text-black  hover:bg-slate-100': !isActiveSortBy(sortBy.sold)
+            })}
             onClick={() => handleSort(sortBy.sold)}
           >
             Bán chạy nhất
           </button>
 
           <select
-            className={classNames(
-              'h-8 px-4 capitalize text-sm  text-left outline-none',
-              {
-                'bg-orange text-white  hover:bg-orange/80':
-                  isActiveSortBy(sortBy.price),
-                'bg-white text-black  hover:bg-slate-100':
-                  !isActiveSortBy(sortBy.price)
-              }
-            )}
+            className={classNames('h-8 px-4 capitalize text-sm  text-left outline-none', {
+              'bg-orange text-white  hover:bg-orange/80': isActiveSortBy(sortBy.price),
+              'bg-white text-black  hover:bg-slate-100': !isActiveSortBy(sortBy.price)
+            })}
             value={order || ''}
             onChange={(event) => {
               handlePriceOrder(
@@ -147,30 +103,17 @@ export default function SortProductList({
                 //  do là target của mình là string
                 //  nhưng mà mình biết chắc kiểu dữ liệu giá trị của nó
                 //  là 1 trong 2 thằng nên mình thằng này ép kiểu lun
-                event.target.value as Exclude<
-                  ProductListConfig['order'],
-                  undefined
-                >
+                event.target.value as Exclude<ProductListConfig['order'], undefined>
               )
             }}
           >
-            <option
-              value=''
-              disabled
-              className='bg-white text-black'
-            >
+            <option value='' disabled className='bg-white text-black'>
               Giá
             </option>
-            <option
-              value={orderConstant.asc}
-              className='bg-white text-black'
-            >
+            <option value={orderConstant.asc} className='bg-white text-black'>
               Giá: thấp đến cao
             </option>
-            <option
-              value={orderConstant.desc}
-              className='bg-white text-black'
-            >
+            <option value={orderConstant.desc} className='bg-white text-black'>
               Giá: cao đến thấp
             </option>
           </select>
@@ -192,11 +135,7 @@ export default function SortProductList({
                   stroke='currentColor'
                   className='w-3 h-3'
                 >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    d='M15.75 19.5 8.25 12l7.5-7.5'
-                  />
+                  <path strokeLinecap='round' strokeLinejoin='round' d='M15.75 19.5 8.25 12l7.5-7.5' />
                 </svg>
               </span>
             ) : (
@@ -218,11 +157,7 @@ export default function SortProductList({
                   stroke='currentColor'
                   className='w-3 h-3'
                 >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    d='M15.75 19.5 8.25 12l7.5-7.5'
-                  />
+                  <path strokeLinecap='round' strokeLinejoin='round' d='M15.75 19.5 8.25 12l7.5-7.5' />
                 </svg>
               </Link>
             )}
@@ -237,11 +172,7 @@ export default function SortProductList({
                   stroke='currentColor'
                   className='w-3 h-3'
                 >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    d='M15.75 19.5 8.25 12l7.5-7.5'
-                  />
+                  <path strokeLinecap='round' strokeLinejoin='round' d='M15.75 19.5 8.25 12l7.5-7.5' />
                 </svg>
               </span>
             ) : (
@@ -263,11 +194,7 @@ export default function SortProductList({
                   stroke='currentColor'
                   className='w-3 h-3'
                 >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    d='m8.25 4.5 7.5 7.5-7.5 7.5'
-                  />
+                  <path strokeLinecap='round' strokeLinejoin='round' d='m8.25 4.5 7.5 7.5-7.5 7.5' />
                 </svg>
               </Link>
             )}

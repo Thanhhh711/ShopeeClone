@@ -1,5 +1,4 @@
-import React from 'react'
-import ProductList from '../ProductList'
+import ProductList from '../ProductList/components'
 
 export default function Profile() {
   return (

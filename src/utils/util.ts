@@ -2,23 +2,15 @@ import axios, { AxiosError } from 'axios'
 import { HttpStatusCode } from 'src/constants/HttpStatusCode.enum'
 
 // type redicate
-export function isAxiosError<T>(
-  error: unknown
-): error is AxiosError<T> {
+export function isAxiosError<T>(error: unknown): error is AxiosError<T> {
   return axios.isAxiosError(error as any)
 }
 
 //  đây là hàm dùng để check lỗi có phải 422
-export function isAxiosUnprocessableEntityError<FromError>(
-  error: unknown
-): error is AxiosError<FromError> {
+export function isAxiosUnprocessableEntityError<FromError>(error: unknown): error is AxiosError<FromError> {
   console.log('error', error)
 
-  return (
-    isAxiosError(error) &&
-    error.response?.status ===
-      HttpStatusCode.UnprocessableEntity
-  )
+  return isAxiosError(error) && error.response?.status === HttpStatusCode.UnprocessableEntity
 }
 
 //  đây 2 hàm dung để biến đổi tiền và số lượng bán hàng bằng js
@@ -36,3 +28,9 @@ export function FormatNumberToSocialStyle(value: number) {
     .replace('.', ',')
     .toLowerCase()
 }
+
+//  cái chỗ export const này nếu mà mình dùng kiểu dưới
+// export function rateSale
+//  thì nó sẽ không sử dụng đc arrow function nha
+
+export const rateSale = (original: number, sale: number) => Math.round(((original - sale) / original) * 100) + '%'
