@@ -2,12 +2,7 @@ import axios, { AxiosError, AxiosInstance } from 'axios'
 import { toast } from 'react-toastify'
 import { HttpStatusCode } from 'src/constants/HttpStatusCode.enum'
 import { AuthResponse } from 'src/types/auth.type'
-import {
-  clearLS,
-  getAccessTokenFormLS,
-  saveAccessTokenToLS,
-  setProfileToLS
-} from './auth'
+import { clearLS, getAccessTokenFormLS, saveAccessTokenToLS, setProfileToLS } from './auth'
 import path from 'src/constants/path'
 
 class Http {
@@ -20,7 +15,7 @@ class Http {
     // Và điều này nó giúp chúng ta tốc ưu tốc độ xử lý
     this.accessToken = getAccessTokenFormLS()
     this.instance = axios.create({
-      baseURL: 'https://api-ecom.duthanhduoc.com/',
+      baseURL: 'https://api-ecom.duthanhduoc.com',
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json'
@@ -45,9 +40,7 @@ class Http {
         const { url } = response.config
         if (url === path.login || url === path.register) {
           const data = response.data
-          this.accessToken = (
-            response.data as AuthResponse
-          ).data?.access_token
+          this.accessToken = (response.data as AuthResponse).data?.access_token
           saveAccessTokenToLS(this.accessToken)
           setProfileToLS(data.data.user)
         } else if (url === path.logout) {
@@ -58,10 +51,7 @@ class Http {
       },
       //  thằng dùng để hanle lỗi mà không phải lỗi 422(lỗi linh tinh-167)
       function (error: AxiosError) {
-        if (
-          error.response?.status !==
-          HttpStatusCode.UnprocessableEntity
-        ) {
+        if (error.response?.status !== HttpStatusCode.UnprocessableEntity) {
           const data: any | undefined = error.response?.data
           console.log(data)
 

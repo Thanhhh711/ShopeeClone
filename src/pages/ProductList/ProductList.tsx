@@ -28,7 +28,8 @@ export default function ProductList() {
       sort_by: queryParams.sort_by,
       exclude: queryParams.exclude,
       name: queryParams.name,
-      order: queryParams.order
+      order: queryParams.order,
+      category: queryParams.category
 
       //  nó là string nha (dữ liệu lấy xuống)
     },
@@ -59,6 +60,7 @@ export default function ProductList() {
     }
     //  đâu có chuyển trang ha gì đâu mà cần keep
   })
+  console.log('categoriesData', categoriesData)
 
   return (
     <div className='bg-gray-200 py-6'>
@@ -86,7 +88,7 @@ export default function ProductList() {
                   </div>
                 ))}
               </div>
-
+              {/* Phân trang */}
               <Pagination queryConfig={queryConfig} pageSize={productData.data.data.pagination.page_size} />
             </div>
           </div>

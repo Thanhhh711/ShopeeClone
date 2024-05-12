@@ -1,8 +1,4 @@
-import {
-  Link,
-  createSearchParams,
-  useNavigate
-} from 'react-router-dom'
+import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import Button from 'src/components/Button'
 
 import path from 'src/constants/path'
@@ -16,6 +12,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { NoUndefinedField } from 'src/types/utils.type'
 import RatingStart from 'src/pages/RatingStart'
 import { omit } from 'lodash'
+import { log } from 'console'
 
 interface Props {
   queryConfig: QueryConfig
@@ -23,9 +20,7 @@ interface Props {
 }
 
 // lấy ra sử dụng nè
-type FormData = NoUndefinedField<
-  Pick<Schema, 'price_max' | 'price_min'>
->
+type FormData = NoUndefinedField<Pick<Schema, 'price_max' | 'price_min'>>
 
 //  phút 37 (185)
 
@@ -37,10 +32,7 @@ type FormData = NoUndefinedField<
 
 const priceSchema = schema.pick(['price_min', 'price_max'])
 
-export default function AsideFilter({
-  queryConfig,
-  categories
-}: Props) {
+export default function AsideFilter({ queryConfig, categories }: Props) {
   //  dùng react.hookform nó chỉ validate cái input mà chúng ta nhập thôi
   const { category } = queryConfig
   //  tại sao dùng useForm do mình đâu có lấy từ thằng register đâu
@@ -58,9 +50,9 @@ export default function AsideFilter({
       price_min: '',
       price_max: ''
     },
-    resolver: yupResolver(priceSchema),
+    resolver: yupResolver(priceSchema)
     //  việc dùng thằng này giúp ta focus vào price max thui(Được muốn z 185 )
-    shouldFocusError: false // mún sử dụng thằng forcus này thì bắt buộc sử dụng ref
+    //    shouldFocusError: false // mún sử dụng thằng forcus này thì bắt buộc sử dụng ref
     //  mà thằng này mặc định là true
   })
 
@@ -84,35 +76,15 @@ export default function AsideFilter({
 
     navigate({
       pathname: path.profile,
-      search: createSearchParams(
-        omit(queryConfig, [
-          'price_min',
-          'price_max',
-          'rating_filter',
-          'category'
-        ])
-      ).toString()
+      search: createSearchParams(omit(queryConfig, ['price_min', 'price_max', 'rating_filter', 'category'])).toString()
     })
   }
 
   return (
     <div className='py-4'>
-      <Link
-        to={path.profile}
-        className={classNames(
-          'flex items-center font-bold',
-          { 'text-orange': !category }
-        )}
-      >
-        <svg
-          viewBox='0 0 12 10'
-          className='mr-3 h-4 w-3 fill-current'
-        >
-          <g
-            fillRule='evenodd'
-            stroke='none'
-            strokeWidth={1}
-          >
+      <Link to={path.profile} className={classNames('flex items-center font-bold', { 'text-orange': !category })}>
+        <svg viewBox='0 0 12 10' className='mr-3 h-4 w-3 fill-current'>
+          <g fillRule='evenodd' stroke='none' strokeWidth={1}>
             <g transform='translate(-373 -208)'>
               <g transform='translate(155 191)'>
                 <g transform='translate(218 17)'>
@@ -128,16 +100,16 @@ export default function AsideFilter({
       </Link>
       {/*  cái gạch ngang  */}
       <div className='bg-gray-300 h-[1px] my-4' />
+
       <ul>
         {categories.map((categoryItem) => {
-          // có id thì
           const isActive = category === categoryItem._id
+          console.log(category)
+
+          console.log(isActive)
+
           return (
-            <li
-              className='py-2 pl-2'
-              key={categoryItem._id}
-            >
-              {/*  mũi tên */}
+            <li className='py-2 pl-2' key={categoryItem._id}>
               <Link
                 to={{
                   pathname: path.profile,
@@ -146,15 +118,12 @@ export default function AsideFilter({
                     category: categoryItem._id
                   }).toString()
                 }}
-                className={classNames('relative px-2 ', {
-                  'text-orange font-semibold': isActive
+                className={classNames('relative px-2', {
+                  'font-semibold text-orange': isActive
                 })}
               >
                 {isActive && (
-                  <svg
-                    viewBox='0 0 4 7'
-                    className='fill-orange h-2 w-2 absolute top-1 left-[-10px]'
-                  >
+                  <svg viewBox='0 0 4 7' className='absolute top-1 left-[-10px] h-2 w-2 fill-orange'>
                     <polygon points='4 3.5 0 0 0 7' />
                   </svg>
                 )}
@@ -164,10 +133,8 @@ export default function AsideFilter({
           )
         })}
       </ul>
-      <Link
-        to={path.profile}
-        className='flex items-center font-bold mt-4 uppercase'
-      >
+
+      <Link to={path.profile} className='flex items-center font-bold mt-4 uppercase'>
         <svg
           enable-background='new 0 0 15 15'
           viewBox='0 0 15 15'
@@ -182,7 +149,7 @@ export default function AsideFilter({
               stroke-linecap='round'
               stroke-linejoin='round'
               stroke-miterlimit='10'
-            ></polyline>
+            />
           </g>
         </svg>
         Bộ lọc tìm kíếm
@@ -205,6 +172,7 @@ export default function AsideFilter({
                     className='grow'
                     placeholer='Đ-từ'
                     classNameInput='p-1 w-full outline-none border border-gray-300 focus:border-gray-500 focus:shawdow-sm rounded-sm'
+                    classNameError='hidden' // do mún hiện lổi
                     //  do là cái onChange này nó chúng ta qui định nó xuất ra event
                     // onChange={(event) =>
                     //   field.onChange(event)
@@ -222,19 +190,14 @@ export default function AsideFilter({
                     // value={field.value}
                     // // do chúng ta đã chuyển qua dungf ref nên chúng ta dễ dàng forcus vào lỗi (185)
                     // ref={field.ref}
-                    classNameError='hidden' // do mún hiện lổi
                   />
                 )
               }}
             />
 
-            <div className='mt-1 text-red-600 min-h-[1.25rem] text-sm text-center'>
-              {errors.price_min?.message}
-            </div>
+            <div className='mt-1 text-red-600 min-h-[1.25rem] text-sm text-center'>{errors.price_min?.message}</div>
 
-            <div className='mx-2 mt-2 shrink-0 text-color-gray'>
-              --
-            </div>
+            <div className='mx-2 mt-2 shrink-0 text-gray-300'>--</div>
 
             <Controller
               control={control}
