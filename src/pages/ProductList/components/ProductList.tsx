@@ -9,38 +9,20 @@ import productApi from 'src/apis/product.api'
 import { ProductListConfig } from 'src/types/product.type'
 import Pagination from 'src/components/Pagination'
 import categoryApi from 'src/apis/category.api'
+import useQueryConfig from 'src/hooks/useQueryConfig'
 
 export type QueryConfig = {
   [key in keyof ProductListConfig]: string
 }
 
 export default function ProductList() {
-  const queryParams: QueryConfig = useQueryParams()
-  //  đây là obj
-  //  omitBy và isUndefined là gì?
-  // nó được dùng để loại bỏ những thuộct tính
-  //  dùng thằng này để giữ nguyên cái url tránh người dùng nhập bậy bạ
-  const queryConfig: QueryConfig = omitBy(
-    {
-      //  nó là string nha (dữ liệu lấy xuống)
-      page: queryParams.page || '1',
-      limit: queryParams.limit || '20',
-      sort_by: queryParams.sort_by,
-      exclude: queryParams.exclude,
-      name: queryParams.name,
-      order: queryParams.order,
-      category: queryParams.category
-
-      //  nó là string nha (dữ liệu lấy xuống)
-    },
-    isUndefined
-  )
+  const queryConfig = useQueryConfig()
 
   //  thằng này (queryKey )lắng nghe sự thanh đổi trên url
   //  thì sau đó nó sẽ gọi lại Api thì từ đó chúng ta được
   //  kết quả mới
   const { data: productData } = useQuery({
-    queryKey: ['products', queryParams],
+    queryKey: ['products', queryConfig],
     queryFn: () => {
       return productApi.getProducts(queryConfig as ProductListConfig)
     },
