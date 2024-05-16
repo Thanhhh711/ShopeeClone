@@ -1,22 +1,14 @@
-import type {
-  RegisterOptions,
-  UseFormGetValues
-} from 'react-hook-form'
+import type { RegisterOptions, UseFormGetValues } from 'react-hook-form'
 import * as yup from 'yup'
 
 //----------------------------------------------------------------
 type Rules = {
-  [key in
-    | 'email'
-    | 'password'
-    | 'confirm_password']?: RegisterOptions
+  [key in 'email' | 'password' | 'confirm_password']?: RegisterOptions
 }
 //  taị sao phải tạo type như z ?
 //  để tránh bị viết sai thuộc tính của lỗi
 
-export const getRules = (
-  getValues?: UseFormGetValues<any>
-): Rules => ({
+export const getRules = (getValues?: UseFormGetValues<any>): Rules => ({
   email: {
     required: { value: true, message: 'Email là bắt buộc' },
     pattern: {
@@ -64,17 +56,12 @@ export const getRules = (
     // return string if false otherwise
     validate:
       typeof getValues === 'function'
-        ? (value) =>
-            value === getValues('password')
-              ? true
-              : 'password không khớp'
+        ? (value) => (value === getValues('password') ? true : 'password không khớp')
         : undefined
   }
 })
 
-function testPriceMinMax(
-  this: yup.TestContext<yup.AnyObject>
-) {
+function testPriceMinMax(this: yup.TestContext<yup.AnyObject>) {
   const { price_min, price_max } = this.parent as {
     price_min: string
     price_max: string
@@ -103,10 +90,7 @@ export const schema = yup.object({
     .required('Passwỏd là bắt buộc')
     .min(6, 'Độ dài từ 6-160 ký tự')
     .max(160, 'Độ dài từ 6-160 ký tự')
-    .oneOf(
-      [yup.ref('password')],
-      'Nhập lại password không khớp '
-    ),
+    .oneOf([yup.ref('password')], 'Nhập lại password không khớp '),
   price_min: yup.string().test({
     name: 'price-not-allowed',
     message: 'Giá không phù hợp',
@@ -116,7 +100,8 @@ export const schema = yup.object({
     name: 'price-not-allowed',
     message: 'Giá không phù hợp',
     test: testPriceMinMax
-  })
+  }),
+  name: yup.string().trim().required('Tên sản phẩm là bắt buộc')
 })
 
 // export const SchemaLogin = schema.omit(['confirm_password'])

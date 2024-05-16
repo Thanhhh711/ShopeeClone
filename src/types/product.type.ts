@@ -9,7 +9,7 @@ export interface Product {
   view: number
   name: string
   description: string
-  catelogy: {
+  category: {
     _id: string
     name: string
   }

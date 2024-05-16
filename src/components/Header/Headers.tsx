@@ -1,14 +1,34 @@
-import { Link } from 'react-router-dom'
+import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 
-import Popover from '../Popover'
+import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
+import { omit } from 'lodash'
 import { useContext } from 'react'
-import { AppContext } from 'src/contexts/app.contexts'
+import { useForm } from 'react-hook-form'
 import authApi from 'src/apis/auth.api'
 import path from 'src/constants/path'
+import { AppContext } from 'src/contexts/app.contexts'
+import useQueryConfig from 'src/hooks/useQueryConfig'
+import { Schema, schema } from 'src/utils/rules'
+import Popover from '../Popover'
+
+//  lấy cái yup ra nè
+type FormData = Pick<Schema, 'name'>
+
+const nameSchema = schema.pick(['name'])
 
 // Cần nghiên cưu thêm bài 170
 export default function Headers() {
+  const queryConfig = useQueryConfig()
+  const navigate = useNavigate()
+  console.log(queryConfig)
+  const { register, handleSubmit } = useForm<FormData>({
+    defaultValues: {
+      name: ''
+    },
+    resolver: yupResolver(nameSchema)
+  })
+
   const {
     // thằng này dùng để check nếu người người dùng chưa đăng nhập
     //  thì hiên đăng nhâp
@@ -30,6 +50,34 @@ export default function Headers() {
   const handleLogout = () => {
     logoutMutation.mutate()
   }
+
+  const onSubmitSearch = handleSubmit((data) => {
+    const config = queryConfig.order
+      ? omit(
+          {
+            ...queryConfig,
+            name: data.name
+          },
+          ['order', 'sort_by']
+        )
+      : {
+          ...queryConfig,
+          name: data.name
+        }
+    navigate({
+      pathname: path.profile,
+      search: createSearchParams(
+        //  tại sao chúng ta phải sử dụng omit trong trường hợp này
+        //  do là khi mà chúng ta bấm phổ biến thì nó phải sắp xếp từ
+        // bán chạy nhất đến thấp nhất
+        //  nhưng mà khi chúng ta chỉnh giá từ cao xuống thấp và ngược lại
+        //  khi chúng ta chỉnh giá rồi mà còn bấm phổ biến thì nó sẽ search theo
+        // giá chứ không phải theo lượt bán nên chúng ta phải loại nó
+        config
+      ).toString()
+    })
+  })
+
   return (
     <header className='pb-5 pt-2 bg-gradient-to-r from-[#f53d2d] to-[#f63] text-white'>
       <div className='container'>
@@ -140,12 +188,12 @@ export default function Headers() {
               </g>
             </svg>
           </Link>
-          <form className='col-span-9'>
+          <form className='col-span-9' onSubmit={onSubmitSearch}>
             <div className='bg-white rounded-sm p-1 flex'>
               <input
                 type='text'
                 placeholder='Free Ship toàn quốc'
-                name='search'
+                {...register('name')}
                 className='text-black px-3 py-2 flex-grow border-none outline-none bg-transparent'
               />
               {/* kính lúp*/}

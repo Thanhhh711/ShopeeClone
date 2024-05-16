@@ -1,15 +1,13 @@
-import AsideFilter from './AsideFilter'
-import SortProductList from './SortProductList'
-import Product from './Product/Product'
-import { omitBy, isUndefined } from 'lodash'
 import { useQuery } from '@tanstack/react-query'
-import useQueryParams from 'src/hooks/useQueryParams'
 import productApi from 'src/apis/product.api'
+import AsideFilter from './AsideFilter'
+import Product from './Product/Product'
+import SortProductList from './SortProductList'
 
-import { ProductListConfig } from 'src/types/product.type'
-import Pagination from 'src/components/Pagination'
 import categoryApi from 'src/apis/category.api'
+import Pagination from 'src/components/Pagination'
 import useQueryConfig from 'src/hooks/useQueryConfig'
+import { ProductListConfig } from 'src/types/product.type'
 
 export type QueryConfig = {
   [key in keyof ProductListConfig]: string
@@ -29,10 +27,12 @@ export default function ProductList() {
     //  thằng này giúp chúng ta giữ lai dữ liệu trước đó khi mà api gọi để cập nhật dữ liệu mới
     //  có nghĩa là ma chuyển trang: thì  thằng data sẽ bi set là undefined, điều này dẫn đến
     //  trang bị giật khi chuyển nên mình sẽ sử dụng thằng này để giữ lại data trước đó tránh bi giật
+    staleTime: 3 * 60 * 1000, // phải có thằng này thì( mới show được mấy sản phẩm tương ứng)
     keepPreviousData: true // hoặc false tùy theo yêu cầu của bạn
-
     //  thằng này
   })
+
+  console.log('productData', productData)
 
   //------------------------------
   const { data: categoriesData } = useQuery({
