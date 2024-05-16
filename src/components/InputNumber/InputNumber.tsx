@@ -1,7 +1,6 @@
 import { InputHTMLAttributes, forwardRef } from 'react'
 //  185
-interface Props
-  extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputNumberProps extends InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string
   classNameInput?: string
   classNameError?: string
@@ -11,13 +10,9 @@ interface Props
 //  do là mih không cần extends Input này
 //  do là mìn hong có nhận thẳng props register
 //  nên la mình hong cần lắm
-export const InputNumber = forwardRef<
-  HTMLInputElement,
-  Props
->(function InputNumberInner(
+export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(function InputNumberInner(
   {
     errorMessage,
-
     className,
     placeholer,
     classNameInput = 'p-3 w-full outline-none border border-gray-300 forcus:border-gray-500 forcus:shawdow-sm rounded-sm',
@@ -27,9 +22,7 @@ export const InputNumber = forwardRef<
   },
   ref
 ) {
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     //  đây là cách test về kiểm tra số
     if ((/^\d+$/.test(value) || value === '') && onChange) {
