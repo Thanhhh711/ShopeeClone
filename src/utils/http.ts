@@ -1,3 +1,4 @@
+
 import axios, { AxiosError, AxiosInstance } from 'axios'
 import { toast } from 'react-toastify'
 import { HttpStatusCode } from 'src/constants/HttpStatusCode.enum'
@@ -7,15 +8,15 @@ import path from 'src/constants/path'
 
 class Http {
   // khi mà chúng ta khai báo biến thì chúng ta phải khai nó trong constructor
-  private accessToken: string
   instance: AxiosInstance
+  private accessToken: string
 
   constructor() {
     // getToken*(constructor chạy) chỗ này là giúp chúng ta lưu trên thanh ram
     // Và điều này nó giúp chúng ta tốc ưu tốc độ xử lý
     this.accessToken = getAccessTokenFormLS()
     this.instance = axios.create({
-      baseURL: 'https://api-ecom.duthanhduoc.com',
+      baseURL: 'https://api-ecom.duthanhduoc.com/',
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json'

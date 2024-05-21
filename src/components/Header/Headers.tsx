@@ -188,7 +188,7 @@ export default function Headers() {
               </g>
             </svg>
           </Link>
-          <form className='col-span-9' onSubmit={onSubmitSearch}>
+          <form className='col-span-4' onSubmit={onSubmitSearch}>
             <div className='bg-white rounded-sm p-1 flex'>
               <input
                 type='text'

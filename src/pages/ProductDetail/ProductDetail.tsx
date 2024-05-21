@@ -1,19 +1,21 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import productApi from 'src/apis/product.api'
-import InputNumber from 'src/components/InputNumber'
+
 import ProductRating from 'src/components/ProductRating'
 import { ProductListConfig, Product as ProductType } from 'src/types/product.type'
 import { FormatNumberToSocialStyle, fomatCurrency, getIdFromNameId, rateSale } from 'src/utils/util'
 import Product from '../ProductList/components/Product'
 import QuantityController from 'src/components/QuantityController'
+import purchaseApi from 'src/apis/purchase.api'
 
 export default function ProductDetail() {
   const { nameId } = useParams()
   const id = getIdFromNameId(nameId as string)
 
+  const queryClient = useQueryClient()
   const [buyCount, setBuyCount] = useState(1)
 
   const { data: productDetailData } = useQuery({
@@ -60,8 +62,9 @@ export default function ProductDetail() {
     enabled: Boolean(product)
   })
 
-  console.log('queryConfig', queryConfig)
-  console.log('productsData', productsData)
+  const addToCartMutation = useMutation({ mutationFn: purchaseApi.addToCart })
+
+  console.log(addToCartMutation)
 
   useEffect(() => {
     if (product && product.images.length > 0) {
@@ -118,6 +121,10 @@ export default function ProductDetail() {
 
   const handleBuyCount = (value: number) => {
     setBuyCount(value)
+  }
+
+  const addToCart = () => {
+    addToCartMutation.mutate({ buy_count: buyCount, product_id: product?._id as string })
   }
 
   if (!product) return null
@@ -237,7 +244,9 @@ export default function ProductDetail() {
                     className='_kL9Hf'
                     src='https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/productdetailspage/0f3bf6e431b6694a9aac.svg'
                   />
-                  <span className='text-center ml-2'>Thêm vào giỏ hàng</span>
+                  <span className='text-center ml-2' onClick={addToCart}>
+                    Thêm vào giỏ hàng
+                  </span>
                 </button>
 
                 <button className='ml-4 flex h-12 min-w-[5rem] items-center justify-center rounded-sm border border-orange bg-orange text-white px-12 capitalize shadow-sm hover:bg-orange/75'>
@@ -284,11 +293,3 @@ export default function ProductDetail() {
     </div>
   )
 }
-
-// {
-// //   productData.data.data.products.map((product) => (
-// //     <div className='col-span-1' key={product._id}>
-// //       <Product product={product} />
-// //     </div>
-// //   ))
-// // }
