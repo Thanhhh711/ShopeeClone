@@ -1,4 +1,3 @@
-
 import axios, { AxiosError, AxiosInstance } from 'axios'
 import { toast } from 'react-toastify'
 import { HttpStatusCode } from 'src/constants/HttpStatusCode.enum'
@@ -16,7 +15,7 @@ class Http {
     // Và điều này nó giúp chúng ta tốc ưu tốc độ xử lý
     this.accessToken = getAccessTokenFormLS()
     this.instance = axios.create({
-      baseURL: 'https://api-ecom.duthanhduoc.com/',
+      baseURL: 'https://api-ecom.duthanhduoc.com',
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json'

@@ -10,6 +10,8 @@ import { FormatNumberToSocialStyle, fomatCurrency, getIdFromNameId, rateSale } f
 import Product from '../ProductList/components/Product'
 import QuantityController from 'src/components/QuantityController'
 import purchaseApi from 'src/apis/purchase.api'
+import { purchasesStatus } from 'src/constants/purchase'
+import { toast } from 'react-toastify'
 
 export default function ProductDetail() {
   const { nameId } = useParams()
@@ -124,7 +126,17 @@ export default function ProductDetail() {
   }
 
   const addToCart = () => {
-    addToCartMutation.mutate({ buy_count: buyCount, product_id: product?._id as string })
+    addToCartMutation.mutate(
+      { buy_count: buyCount, product_id: product?._id as string },
+      {
+        onSuccess: (data) => {
+          toast.success(data.data.message, { autoClose: 1000 })
+          // thằng invalidateQueries được xem là làm cho cái API lúc trc gọi nó không còn đúng
+          // điều này dẫn đến sẽ fetch API 1 lần nữa
+          queryClient.invalidateQueries({ queryKey: ['purchases', { status: purchasesStatus.inCart }] })
+        }
+      }
+    )
   }
 
   if (!product) return null
@@ -238,15 +250,16 @@ export default function ProductDetail() {
                 <div className='ml-6 text-sm text-gray-500'>{product.quantity} sản phẩm có sẵn</div>
               </div>
               <div className='mt-8 flex items-center '>
-                <button className='flex h-12 items-center justify-center rounded-sm border border-orange bg-orange/10 px-5 capitalize text-orange shadow-sm hover:bg-orange/5'>
+                <button
+                  className='flex h-12 items-center justify-center rounded-sm border border-orange bg-orange/10 px-5 capitalize text-orange shadow-sm hover:bg-orange/5'
+                  onClick={addToCart}
+                >
                   <img
                     alt='icon-add-to-cart'
                     className='_kL9Hf'
                     src='https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/productdetailspage/0f3bf6e431b6694a9aac.svg'
                   />
-                  <span className='text-center ml-2' onClick={addToCart}>
-                    Thêm vào giỏ hàng
-                  </span>
+                  <span className='text-center ml-2'>Thêm vào giỏ hàng</span>
                 </button>
 
                 <button className='ml-4 flex h-12 min-w-[5rem] items-center justify-center rounded-sm border border-orange bg-orange text-white px-12 capitalize shadow-sm hover:bg-orange/75'>

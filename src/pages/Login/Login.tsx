@@ -19,8 +19,7 @@ type FormData = Pick<Schema, 'email' | 'password'>
 const loginSchema = schema.pick(['email', 'password'])
 
 export default function Login() {
-  const { setIsAuthenticated, setProfile } =
-    useContext(AppContext)
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const navigate = useNavigate()
   //  đây là những thuộc tính có sẵn ở trong useForm
 
@@ -35,9 +34,7 @@ export default function Login() {
   })
 
   const loginMutation = useMutation({
-    mutationFn: (
-      body: Omit<FormData, 'confirm_password'>
-    ) => authApi.loginAccount(body)
+    mutationFn: (body: Omit<FormData, 'confirm_password'>) => authApi.loginAccount(body)
   })
 
   const onSubmit = handleSubmit((data) => {
@@ -52,11 +49,7 @@ export default function Login() {
       },
       onError: (error) => {
         //  khi mà server trả về đó là 1 cái response lỗi nên là dùng generic định dạng lỗi truyền vào
-        if (
-          isAxiosUnprocessableEntityError<
-            ErrorResponse<FormData>
-          >(error)
-        ) {
+        if (isAxiosUnprocessableEntityError<ErrorResponse<FormData>>(error)) {
           // chỗ nảy ra được
           // email: email không tồn tại
           const formError = error.response?.data.data
@@ -82,10 +75,7 @@ export default function Login() {
       <div className='container'>
         <div className='grid grid-cols-1 py-12 lg:grid-cols-5 lg:py-32 lg:pr-10'>
           <div className='lg:col-span-2 lg:col-start-4'>
-            <form
-              className='p-10 rounded bg-white shadow-sm'
-              onSubmit={onSubmit}
-            >
+            <form className='p-10 rounded bg-white shadow-sm' onSubmit={onSubmit}>
               <div className='text-2xl'>Đăng Nhập</div>
               <Input
                 name='email'
@@ -116,13 +106,8 @@ export default function Login() {
               </div>
               <div className='mt-8 '>
                 <div className='flex items-center justify-center'>
-                  <span className='text-gray-600 mr-2'>
-                    Bạn chưa có tài khoảng{' '}
-                  </span>
-                  <Link
-                    className='text-red-400'
-                    to='/Register'
-                  >
+                  <span className='text-gray-600 mr-2'>Bạn chưa có tài khoảng </span>
+                  <Link className='text-red-400' to='/Register'>
                     Đăng Ký
                   </Link>
                 </div>
