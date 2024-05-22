@@ -240,11 +240,11 @@ export default function ProductDetail() {
                 <div className='capitaize text-gray-500'>số lượng</div>
 
                 <QuantityController
-                  onDecrease={handleBuyCount}
-                  onIncrease={handleBuyCount}
-                  onType={handleBuyCount}
-                  value={buyCount} // Buy count được quản lý bởi cha của nó (Component ProductDetail)
-                  max={product.quantity}
+                // onDecrease={handleBuyCount}
+                // onIncrease={handleBuyCount}
+                // onType={handleBuyCount}
+                // value={buyCount} // Buy count được quản lý bởi cha của nó (Component ProductDetail)
+                // max={product.quantity}
                 />
 
                 <div className='ml-6 text-sm text-gray-500'>{product.quantity} sản phẩm có sẵn</div>
