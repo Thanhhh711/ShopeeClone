@@ -9,6 +9,7 @@ import Profile from './pages/Profile'
 import Register from './pages/Register'
 import ProductList from './pages/ProductList/components'
 import ProductDetail from './pages/ProductDetail'
+import Cart from './pages/Cart'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
@@ -59,6 +60,15 @@ export default function useRouterElements() {
           element: (
             <MainLayout>
               <Profile />
+            </MainLayout>
+          )
+        },
+        {
+          path: path.cart,
+          index: true, // để tránh nó kh find được gòi lại rơi vào vòng lặp vô hạn
+          element: (
+            <MainLayout>
+              <Cart />
             </MainLayout>
           )
         }

@@ -1,7 +1,7 @@
 import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { omit } from 'lodash'
 import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
@@ -23,14 +23,15 @@ const MAX_PURCHASES = 5
 // Cần nghiên cưu thêm bài 170
 export default function Headers() {
   const queryConfig = useQueryConfig()
-  const navigate = useNavigate()
-  console.log(queryConfig)
+  const queryClient = useQueryClient()
   const { register, handleSubmit } = useForm<FormData>({
     defaultValues: {
       name: ''
     },
     resolver: yupResolver(nameSchema)
   })
+
+  const navigate = useNavigate()
 
   const {
     // thằng này dùng để check nếu người người dùng chưa đăng nhập
@@ -47,6 +48,8 @@ export default function Headers() {
     onSuccess: () => {
       setIsAuthenticated(false)
       setProfile(null)
+      // khi đăng xuất thì xóa có số hàng trong giỏ
+      queryClient.removeQueries({ queryKey: ['purchases', { status: purchasesStatus.inCart }] })
     }
   })
 
@@ -88,7 +91,8 @@ export default function Headers() {
   // cái query này bị unmount và chỉ bị gọi lại khi bị unmount(destroy)
   const { data: purchasesInCartData } = useQuery({
     queryKey: ['purchases', { status: purchasesStatus.inCart }],
-    queryFn: () => purchaseApi.getPurchases({ status: purchasesStatus.inCart })
+    queryFn: () => purchaseApi.getPurchases({ status: purchasesStatus.inCart }),
+    enabled: isAuthenticated
   })
 
   const purchasesInCart = purchasesInCartData?.data.data
@@ -264,9 +268,12 @@ export default function Headers() {
                           {purchasesInCart.length > MAX_PURCHASES ? purchasesInCart.length - MAX_PURCHASES : ''} Thêm
                           vào giỏ hảng
                         </div>
-                        <button className='capitalize text-xs bg-orange hover:bg-opacity-80 px-4 py-2 rounded-sm text-white'>
+                        <Link
+                          to={path.cart}
+                          className='capitalize text-xs bg-orange hover:bg-opacity-80 px-4 py-2 rounded-sm text-white'
+                        >
                           Xem giỏ hảng
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   ) : (
@@ -296,9 +303,12 @@ export default function Headers() {
                     d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z'
                   />
                 </svg>
-                <span className='absolute top-0 left-[17px] rounded-full px-[9px] py-[1px] bg-white text-orange text-xs'>
-                  {purchasesInCart?.length}
-                </span>
+                {/*  co purchase thì mới có thẻ span */}
+                {purchasesInCart && (
+                  <span className='absolute top-0 left-[17px] rounded-full px-[9px] py-[1px] bg-white text-orange text-xs'>
+                    {purchasesInCart?.length}
+                  </span>
+                )}
               </Link>
             </Popover>
           </div>

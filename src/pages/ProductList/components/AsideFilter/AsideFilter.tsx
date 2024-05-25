@@ -13,6 +13,7 @@ import { NoUndefinedField } from 'src/types/utils.type'
 import RatingStart from 'src/pages/RatingStart'
 import { omit } from 'lodash'
 import { log } from 'console'
+import InputV2 from 'src/components/InputV2'
 
 interface Props {
   queryConfig: QueryConfig
@@ -161,7 +162,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
 
         <form className='mt-2' onSubmit={onSubmit}>
           <div className='flex items-start'>
-            <Controller
+            {/* <Controller
               control={control}
               name='price_min'
               //  filed là đối tương chứa thông tin ma đến trường dữ liệu Controller đang điều kiển
@@ -192,6 +193,24 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
                     // ref={field.ref}
                   />
                 )
+              }}
+            /> */}
+
+            <InputV2
+              // bắt buộc sử dụng V2 phải truyền control của ReactHookForm vào
+              // control lấy đâu ra từ react hook Form
+              control={control}
+              type='number'
+              className='grow'
+              placeholder='Đ-từ '
+              classNameInput='p-1 w-full outline-none border border-gray-300 focus:border-gray-500 focus:shawdow-sm rounded-sm'
+              classNameError='hidden'
+              name='price_min'
+              onChange={() => {
+                // nếu chúng ta dùng trigger kiểu này
+                // trigger() // thì nó sẽ validate hết cái form của chúng ta
+                //
+                trigger('price_max') // z là nó chỉ validate đến thằng pricemaxx
               }}
             />
 
