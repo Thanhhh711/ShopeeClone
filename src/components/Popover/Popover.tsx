@@ -1,6 +1,5 @@
-import { Link } from 'react-router-dom'
-import { FloatingPortal, arrow, shift, useFloating, offset, Placement } from '@floating-ui/react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { FloatingPortal, Placement, arrow, offset, shift, useFloating } from '@floating-ui/react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { ElementType, useId, useRef, useState } from 'react'
 
 interface Props {
@@ -56,6 +55,7 @@ export default function Popover({
                 transformOrigin: `${middlewareData.arrow?.x}px-top`
               }}
             >
+              {/* thẻ ngôi sao */}
               <span
                 ref={arrowRef}
                 className='border-x-transparent border-t-transparent border-b-white-500 border-[11px] absolute -translate-y-full'

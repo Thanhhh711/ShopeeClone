@@ -12,34 +12,23 @@ import { ErrorResponse } from 'src/types/utils.type'
 import { schema, Schema } from 'src/utils/rules'
 import { isAxiosUnprocessableEntityError } from 'src/utils/util'
 
-type FormData = Pick<
-  Schema,
-  'email' | 'password' | 'confirm_password'
->
-const registerSchema = schema.pick([
-  'email',
-  'password',
-  'confirm_password'
-])
+type FormData = Pick<Schema, 'email' | 'password' | 'confirm_password'>
+const registerSchema = schema.pick(['email', 'password', 'confirm_password'])
 export default function Register() {
-  const { setIsAuthenticated, setProfile } =
-    useContext(AppContext)
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const navigate = useNavigate()
 
   const {
     register,
     handleSubmit,
     setError,
-
     formState: { errors }
   } = useForm<FormData>({
     resolver: yupResolver(registerSchema)
   })
 
   const registerAccountMutation = useMutation({
-    mutationFn: (
-      body: Omit<FormData, 'confirm_password'>
-    ) => authApi.registerAccount(body)
+    mutationFn: (body: Omit<FormData, 'confirm_password'>) => authApi.registerAccount(body)
   })
 
   // const rules = getRules(getValues)
@@ -68,13 +57,7 @@ export default function Register() {
         console.log('errros:', error)
 
         //  khi mà server trả về đó là 1 cái response lỗi nên là dùng generic định dạng lỗi truyền vào
-        if (
-          isAxiosUnprocessableEntityError<
-            ErrorResponse<
-              Omit<FormData, 'confirm_password'>
-            >
-          >(error)
-        ) {
+        if (isAxiosUnprocessableEntityError<ErrorResponse<Omit<FormData, 'confirm_password'>>>(error)) {
           console.log(error.response)
 
           // chỗ nảy ra được
@@ -86,22 +69,10 @@ export default function Register() {
             Object.keys(formError).forEach((key) => {
               console.log(key)
 
-              setError(
-                key as keyof Omit<
-                  FormData,
-                  'confirm_password'
-                >,
-                {
-                  message:
-                    formError[
-                      key as keyof Omit<
-                        FormData,
-                        'confirm_password'
-                      >
-                    ],
-                  type: 'Server'
-                }
-              )
+              setError(key as keyof Omit<FormData, 'confirm_password'>, {
+                message: formError[key as keyof Omit<FormData, 'confirm_password'>],
+                type: 'Server'
+              })
             })
           }
           // if (formError?.email) {
@@ -126,10 +97,7 @@ export default function Register() {
       <div className='container'>
         <div className='grid grid-cols-1 py-12 lg:grid-cols-5 lg:py-32 lg:pr-10'>
           <div className='lg:col-span-2 lg:col-start-4'>
-            <form
-              className='p-10 rounded bg-white shadow-sm'
-              onSubmit={onSubmit}
-            >
+            <form className='p-10 rounded bg-white shadow-sm' onSubmit={onSubmit}>
               <div className='text-2xl'>Đăng Ký</div>
               <Input
                 name='email'
@@ -156,33 +124,22 @@ export default function Register() {
                 placeholder='Confirm_password'
                 className='mt-2'
                 register={register}
-                errorMessage={
-                  errors.confirm_password?.message
-                }
+                errorMessage={errors.confirm_password?.message}
                 autoComplete='on'
               />
               <div className='mt-2'>
                 <Button
                   className='w-full text-center py-4 px-2 uppercase bg-red-500 text-white text-sm hover:bg-red-600 flex justify-center items-center'
-                  isLoading={
-                    registerAccountMutation.isPending
-                  }
-                  disabled={
-                    registerAccountMutation.isPending
-                  }
+                  isLoading={registerAccountMutation.isPending}
+                  disabled={registerAccountMutation.isPending}
                 >
                   Đăng Ký
                 </Button>
               </div>
               <div className='mt-8 '>
                 <div className='flex items-center justify-center'>
-                  <span className='text-gray-600 mr-2'>
-                    Bạn đã có tài khoảng chưa
-                  </span>
-                  <Link
-                    className=' text-red-400 mr-2'
-                    to='/Login'
-                  >
+                  <span className='text-gray-600 mr-2'>Bạn đã có tài khoảng chưa</span>
+                  <Link className=' text-red-400 mr-2' to='/Login'>
                     Đăng nhâp
                   </Link>
                 </div>

@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { Link, createSearchParams } from 'react-router-dom'
 import path from 'src/constants/path'
-import { QueryConfig } from 'src/pages/ProductList/ProductList'
+import { QueryConfig } from 'src/pages/ProductList/components/Product/Product'
 
 interface Props {
   queryConfig: QueryConfig
@@ -30,10 +30,7 @@ Với range = 2 áp dụng cho khoảng cách đầu, cuối và xung quanh curr
  */
 
 const RANGE = 2
-export default function Pagination({
-  queryConfig,
-  pageSize
-}: Props) {
+export default function Pagination({ queryConfig, pageSize }: Props) {
   const page = Number(queryConfig.page)
 
   const renderPagination = () => {
@@ -44,10 +41,7 @@ export default function Pagination({
       if (!dotBefore) {
         dotBefore = true
         return (
-          <span
-            key={index}
-            className='mx-2 rounded border bg-white px-3 py-2 shadow-sm'
-          >
+          <span key={index} className='mx-2 rounded border bg-white px-3 py-2 shadow-sm'>
             ...
           </span>
         )
@@ -58,10 +52,7 @@ export default function Pagination({
       if (!dotAfter) {
         dotAfter = true
         return (
-          <span
-            key={index}
-            className='mx-2 rounded border bg-white px-3 py-2 shadow-sm'
-          >
+          <span key={index} className='mx-2 rounded border bg-white px-3 py-2 shadow-sm'>
             ...
           </span>
         )
@@ -74,32 +65,15 @@ export default function Pagination({
         const pageNumber = index + 1
 
         // Điều kiện để return về ...
-        if (
-          page <= RANGE * 2 + 1 &&
-          pageNumber > page + RANGE &&
-          pageNumber < pageSize - RANGE + 1
-        ) {
+        if (page <= RANGE * 2 + 1 && pageNumber > page + RANGE && pageNumber < pageSize - RANGE + 1) {
           return renderDotAfter(index)
-        } else if (
-          page > RANGE * 2 + 1 &&
-          page < pageSize - RANGE * 2
-        ) {
-          if (
-            pageNumber < page - RANGE &&
-            pageNumber > RANGE
-          ) {
+        } else if (page > RANGE * 2 + 1 && page < pageSize - RANGE * 2) {
+          if (pageNumber < page - RANGE && pageNumber > RANGE) {
             return renderDotBefore(index)
-          } else if (
-            pageNumber > page + RANGE &&
-            pageNumber < pageSize - RANGE + 1
-          ) {
+          } else if (pageNumber > page + RANGE && pageNumber < pageSize - RANGE + 1) {
             return renderDotAfter(index)
           }
-        } else if (
-          page >= pageSize - RANGE * 2 &&
-          pageNumber > RANGE &&
-          pageNumber < page - RANGE
-        ) {
+        } else if (page >= pageSize - RANGE * 2 && pageNumber > RANGE && pageNumber < page - RANGE) {
           return renderDotBefore(index)
         }
 
@@ -113,13 +87,10 @@ export default function Pagination({
               }).toString()
             }}
             key={index}
-            className={classNames(
-              'mx-2 cursor-pointer rounded border bg-white px-3 py-2 shadow-sm',
-              {
-                'border-cyan-500': pageNumber === page,
-                'border-transparent': pageNumber !== page
-              }
-            )}
+            className={classNames('mx-2 cursor-pointer rounded border bg-white px-3 py-2 shadow-sm', {
+              'border-cyan-500': pageNumber === page,
+              'border-transparent': pageNumber !== page
+            })}
           >
             {pageNumber}
           </Link>
@@ -130,9 +101,7 @@ export default function Pagination({
   return (
     <div className='mt-6 flex flex-wrap justify-center'>
       {page === 1 ? (
-        <span className='mx-2 cursor-not-allowed rounded border bg-white/60 px-3 py-2  shadow-sm'>
-          Prev
-        </span>
+        <span className='mx-2 cursor-not-allowed rounded border bg-white/60 px-3 py-2  shadow-sm'>Prev</span>
       ) : (
         <Link
           to={{
@@ -151,9 +120,7 @@ export default function Pagination({
       {renderPagination()}
 
       {page === pageSize ? (
-        <span className='mx-2 cursor-not-allowed rounded border bg-white/60 px-3 py-2  shadow-sm'>
-          Next
-        </span>
+        <span className='mx-2 cursor-not-allowed rounded border bg-white/60 px-3 py-2  shadow-sm'>Next</span>
       ) : (
         //  tại sao chúng ta ưu tiên thẻ Link hơn là button
         //  chúng ta có thể thấy được url

@@ -10,6 +10,7 @@ import Register from './pages/Register'
 import ProductList from './pages/ProductList/components'
 import ProductDetail from './pages/ProductDetail'
 import Cart from './pages/Cart'
+import CartLayout from './layouts/CartLayout'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
@@ -67,9 +68,9 @@ export default function useRouterElements() {
           path: path.cart,
           index: true, // để tránh nó kh find được gòi lại rơi vào vòng lặp vô hạn
           element: (
-            <MainLayout>
+            <CartLayout>
               <Cart />
-            </MainLayout>
+            </CartLayout>
           )
         }
       ]
