@@ -135,8 +135,8 @@ export default function Headers() {
             {/* giỏ hàng */}
             <Popover
               renderPopover={
-                <div className='bg-white relative shadow-md rounded-sm border border-gray-200 max-w-[400px] text-sm'>
-                  {purchasesInCart ? (
+                <div className='bg-white relative shadow-md rounded-sm border border-gray-200  text-sm'>
+                  {purchasesInCart && purchasesInCart.length > 0 ? (
                     <div className='p-2'>
                       <div className='text-gray-400'>Sản phẩm mới thêm</div>
                       <div className='mt-5'>
@@ -199,7 +199,7 @@ export default function Headers() {
                   />
                 </svg>
                 {/*  co purchase thì mới có thẻ span */}
-                {purchasesInCart && (
+                {purchasesInCart && purchasesInCart.length > 0 && (
                   <span className='absolute top-0 left-[17px] rounded-full px-[9px] py-[1px] bg-white text-orange text-xs'>
                     {purchasesInCart?.length}
                   </span>
