@@ -9,11 +9,11 @@ export default function UserLayout() {
           <div className='md:col-span-3 lg:col-span-2'>
             <UserSideNav />
           </div>
-          <div className='md:col-span-9 lg:col-span-10'></div>
+          <div className='md:col-span-9 lg:col-span-10'>
+            {/* khi mà xài outlet rồi là không có truyênf compoentn đc đâu nha */}
+            <Outlet />
+          </div>
         </div>
-
-        {/* khi mà xài outlet rồi là không có truyênf compoentn đc đâu nha */}
-        <Outlet />
       </div>
     </div>
   )

@@ -1,11 +1,7 @@
 import { InputHTMLAttributes } from 'react'
-import type {
-  RegisterOptions,
-  UseFormRegister
-} from 'react-hook-form'
+import type { RegisterOptions, UseFormRegister } from 'react-hook-form'
 
-interface Props
-  extends InputHTMLAttributes<HTMLInputElement> {
+interface Props extends InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string
   classNameInput?: string
   classNameError?: string
@@ -20,14 +16,13 @@ export default function Input({
   name,
   rules,
   register,
-  classNameInput = 'p-3 w-full outline-none border border-gray-300 forcus:border-gray-500 forcus:shawdow-sm rounded-sm',
+  classNameInput = 'p-3 w-full outline-none border border-gray-300 focus:border-gray-500 forcus:shawdow-sm rounded-sm',
   classNameError = 'mt-1 text-red-600 min-h-[1.25rem] text-sm',
 
   placeholder,
   ...rest
 }: Props) {
-  const registerResult =
-    register && name ? register(name, rules) : {}
+  const registerResult = register && name ? register(name, rules) : {}
   return (
     <div className={className}>
       <input
