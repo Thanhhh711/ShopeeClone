@@ -10,7 +10,10 @@ import { AppProvider } from './contexts/app.contexts.tsx'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false
+      refetchOnWindowFocus: false,
+      // cái retry được dùng để tắt mấy cái toast khi token bị hết hanj
+      // nó gọi báo tới 3 lần lận nên là chỉ 1 lần thoi
+      retry: 0
     }
   }
 })
@@ -18,6 +21,7 @@ const queryClient = new QueryClient({
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter>
+      {/* QueryClient nó giống như cái context vậy á*/}
       <QueryClientProvider client={queryClient}>
         <AppProvider>
           <App />

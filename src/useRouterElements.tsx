@@ -11,6 +11,8 @@ import ProductList from './pages/ProductList/components'
 import ProductDetail from './pages/ProductDetail'
 import Cart from './pages/Cart'
 import CartLayout from './layouts/CartLayout'
+import UserLayout from './pages/User/layout/UserLayout'
+import ChangPassword from './pages/User/pages/ChangePassword'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
@@ -56,15 +58,6 @@ export default function useRouterElements() {
       element: <ProtectedRoute />,
       children: [
         {
-          path: path.profile,
-          index: true, // để tránh nó kh find được gòi lại rơi vào vòng lặp vô hạn
-          element: (
-            <MainLayout>
-              <Profile />
-            </MainLayout>
-          )
-        },
-        {
           path: path.cart,
           index: true, // để tránh nó kh find được gòi lại rơi vào vòng lặp vô hạn
           element: (
@@ -72,6 +65,27 @@ export default function useRouterElements() {
               <Cart />
             </CartLayout>
           )
+        },
+        {
+          path: path.user,
+          element: (
+            <MainLayout>
+              {/*  DO là minh sử dụng Outlet, nên là kho không có children */}
+              {/*  */}
+              <UserLayout />
+            </MainLayout>
+          ),
+          children: [
+            {
+              path: path.profile,
+              //  nên là mấy thằng này sẽ được chèn vào chỗ của outlet
+              element: <Profile />
+            },
+            {
+              path: path.changePassword,
+              element: <ChangPassword />
+            }
+          ]
         }
       ]
     },

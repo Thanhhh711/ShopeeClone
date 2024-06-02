@@ -8,6 +8,8 @@ import authApi from 'src/apis/auth.api'
 import { purchasesStatus } from 'src/constants/purchase'
 
 export default function NavHeader() {
+  // useQueryClinet này nó giông như là useContext vậy á
+  //  nếu chúng ta dùng như này thì nó giống như là sử dụng queryCLient bên thằng main vậy á
   const queryClient = useQueryClient()
   const {
     // thằng này dùng để check nếu người người dùng chưa đăng nhập
@@ -49,6 +51,7 @@ export default function NavHeader() {
             </div>
           }
         >
+          {/*  trái đất */}
           <svg
             xmlns='http://www.w3.org/2000/svg'
             fill='none'
@@ -64,6 +67,7 @@ export default function NavHeader() {
             />
           </svg>
 
+          {/*  mặc định mới vào là tiếng việt */}
           <div className='mx-1'>Tiếng Việt</div>
           {/*  mũi tên */}
           <svg

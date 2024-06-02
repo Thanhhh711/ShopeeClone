@@ -11,6 +11,7 @@ import useQueryConfig from 'src/hooks/useQueryConfig'
 import useSearchProducts from 'src/hooks/useSearchProducts'
 import { fomatCurrency } from 'src/utils/util'
 import Popover from '../Popover'
+import NavHeader from '../NavHeader'
 
 const MAX_PURCHASES = 5
 // Cần nghiên cưu thêm bài 170
@@ -91,6 +92,7 @@ export default function Headers() {
   return (
     <header className='pb-5 pt-2 bg-gradient-to-r from-[#f53d2d] to-[#f63] text-white'>
       <div className='container'>
+        <NavHeader />
         {/* --------------------------------------------------------------- */}
         {/*  gap khoảng cách giữa các phần tử  1 rem*/}
         <div className='grid grid-cols-12 gap-4 mt-4 items-end'>

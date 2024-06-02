@@ -60,7 +60,16 @@ class Http {
           const message = data.message || error.message
           toast.error(message)
         }
-
+        if (error.response?.status === HttpStatusCode.Unauthorized) {
+          // nếu mà lỗi 401 (là do token bị hết hạn , sau khi hết hannj chúng ta sẽ chèn 1 ký tự)
+          // để phá cái token đó nên là có cái lỗi này
+          // clearLS  này xóa tất cả các thông tin có trong LS
+          // này mới clear trên LS thoi nha, chúng ta phải lun trên thằng Context nữa
+          clearLS()
+          // sau khi clear reload trang
+          // này là reload cũng đc nhưng mà kh nên
+          //window.location.reload()
+        }
         return Promise.reject(error)
       }
     )
