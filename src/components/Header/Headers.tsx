@@ -30,7 +30,8 @@ export default function Headers() {
   const {
     // thằng này dùng để check nếu người người dùng chưa đăng nhập
     //  thì hiên đăng nhâp
-    isAuthenticated
+    isAuthenticated,
+    profile
     // setIsAuthenticated,
     // setProfile,
   } = useContext(AppContext)

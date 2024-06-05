@@ -24,7 +24,7 @@ function RejectedRoute() {
   //  hàm này dùng cho là khi đã login rồi thì không cho login| regis nưa
   const { isAuthenticated } = useContext(AppContext)
 
-  return !isAuthenticated ? <Outlet /> : <Navigate to='/profile' />
+  return !isAuthenticated ? <Outlet /> : <Navigate to='/' />
 }
 //  nơi đây sẽ cấu hình phân trang
 export default function useRouterElements() {
