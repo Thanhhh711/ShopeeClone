@@ -14,6 +14,7 @@ import { AppContext } from 'src/contexts/app.contexts'
 import { ErrorResponse } from 'src/types/utils.type'
 import { setProfileToLS } from 'src/utils/auth'
 import { getAvatarUrl, isAxiosUnprocessableEntityError } from 'src/utils/util'
+import config from 'src/constants/config'
 
 type FormData = Pick<userSchema, 'name' | 'address' | 'phone' | 'date_of_birth' | 'avatar'>
 
@@ -143,6 +144,10 @@ export default function Profile() {
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // này là 1 cái file list mà chúng ta lấy thì chỉ lấy có 1 file thôi nên là items (0)
     const fileformLocal = event.target.files?.[0]
+    if (fileformLocal && (fileformLocal?.size >= config.maxSizeUpLoadAvatar || !fileformLocal.type.includes('image'))) {
+      toast.error('Vui lòng chọn ảnh có dung lượng nhỏ hơn 1MB và phải là ảnh')
+      return
+    }
     setFile(fileformLocal)
   }
 
@@ -240,7 +245,16 @@ export default function Profile() {
             <div className='my-5 h-24 w-24'>
               <img src={preViewImage || getAvatarUrl(avatar)} className='h-full w-full rounded-full object-cover' />
             </div>
-            <input className='hidden' type='file' accept='jpg,.jeg,.png' ref={fileInputRef} onChange={onFileChange} />
+            <input
+              className='hidden'
+              type='file'
+              accept='jpg,.jeg,.png'
+              ref={fileInputRef}
+              onChange={onFileChange}
+              onClick={(event) => {
+                ;(event.target as any).value = null
+              }}
+            />
             <button
               onClick={handleUpload}
               type='button'
