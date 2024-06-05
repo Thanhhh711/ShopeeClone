@@ -1,12 +1,12 @@
-import React, { useContext } from 'react'
-import Popover from '../Popover'
-import { Link } from 'react-router-dom'
-import path from 'src/constants/path'
-import { AppContext } from 'src/contexts/app.contexts'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useContext } from 'react'
+import { Link } from 'react-router-dom'
 import authApi from 'src/apis/auth.api'
+import path from 'src/constants/path'
 import { purchasesStatus } from 'src/constants/purchase'
-import userImage from 'src/assets/images/user.svg'
+import { AppContext } from 'src/contexts/app.contexts'
+import { getAvatarUrl } from 'src/utils/util'
+import Popover from '../Popover'
 
 export default function NavHeader() {
   // useQueryClinet này nó giông như là useContext vậy á
@@ -111,7 +111,11 @@ export default function NavHeader() {
           >
             <div className='w-5 h-5 mr-2 flex-shink-0'>
               {/*  avataer */}
-              <img className='w-full h-full object-cover rounded-full' src={profile?.avatar || userImage} />
+              <img
+                src={getAvatarUrl(profile?.avatar)}
+                alt='avatar'
+                className='w-full h-full object-cover rounded-full'
+              />
             </div>
             <div>{profile?.email}</div>
           </Popover>

@@ -4,6 +4,7 @@ import { HttpStatusCode } from 'src/constants/HttpStatusCode.enum'
 import { AuthResponse } from 'src/types/auth.type'
 import { clearLS, getAccessTokenFormLS, saveAccessTokenToLS, setProfileToLS } from './auth'
 import path from 'src/constants/path'
+import config from 'src/constants/config'
 
 class Http {
   // khi mà chúng ta khai báo biến thì chúng ta phải khai nó trong constructor
@@ -15,7 +16,7 @@ class Http {
     // Và điều này nó giúp chúng ta tốc ưu tốc độ xử lý
     this.accessToken = getAccessTokenFormLS()
     this.instance = axios.create({
-      baseURL: 'https://api-ecom.duthanhduoc.com',
+      baseURL: config.baseUrl,
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json'
@@ -57,7 +58,7 @@ class Http {
           console.log(data)
 
           //  nếu maf data.message thì không có thì dùng error.message
-          const message = data.message || error.message
+          const message = data?.message || error.message
           toast.error(message)
         }
         if (error.response?.status === HttpStatusCode.Unauthorized) {

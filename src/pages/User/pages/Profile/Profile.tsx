@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import userApi from 'src/apis/user.api'
 import Button from 'src/components/Button'
@@ -11,13 +11,55 @@ import DateSelect from '../../components/DateSelect'
 
 import { toast } from 'react-toastify'
 import { AppContext } from 'src/contexts/app.contexts'
+import { ErrorResponse } from 'src/types/utils.type'
 import { setProfileToLS } from 'src/utils/auth'
+import { getAvatarUrl, isAxiosUnprocessableEntityError } from 'src/utils/util'
 
 type FormData = Pick<userSchema, 'name' | 'address' | 'phone' | 'date_of_birth' | 'avatar'>
 
+type FormDataError = Omit<FormData, 'date_of_birth'> & {
+  date_of_birth?: string
+}
+
 const profileSchema = userSchema.pick(['name', 'address', 'phone', 'date_of_birth', 'avatar'])
+
+// Có 2 flow up ảnh hiện nay
+/*
+  Flow 1: ưu điểm: nhanh, nhược điểm: user dễ spam(kiểu ngta đổi ảnh liên tục, server có ảnh mà kh ngta kh lưu)
+Nhấn upload: upload lên server luôn => server trả về url ảnh
+Nhấn submit thì gửi url ảnh cộng với data lên server
+
+Flow 2: nhược điểm: chậm do thực hiện thuần tự, ưu điểm(ngược lại nhược điểm vs Flow 1)
+Nhấn upload: không upload lên server
+Nhấn submit thì tiến hành upload lên server, nếu upload thành công thì tiến hành gọi api updateProfile
+
+
+
+*/
+
 export default function Profile() {
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
   const { setProfile } = useContext(AppContext)
+
+  const [file, setFile] = useState<File>()
+
+  const preViewImage = useMemo(() => {
+    //tạo url từ cái file
+    return file ? URL.createObjectURL(file) : ''
+  }, [file])
+
+  // cho data này 1 cái aliat name để dễ gọi
+  const { data: profileData, refetch } = useQuery({
+    queryKey: ['profile'],
+    // thằng này cũng như vậy mà cách viết khác
+    // queryFn: () => userApi.getProfile(),
+    queryFn: userApi.getProfile // thằng này cũng là 1 call bakc
+  })
+
+  const profile = profileData?.data.data
+  const updateProfileMutation = useMutation({ mutationFn: userApi.updateProfile })
+  const uploadAvatarMutation = useMutation({ mutationFn: userApi.uploadAvatar })
 
   const {
     register,
@@ -39,16 +81,9 @@ export default function Profile() {
     resolver: yupResolver(profileSchema)
   })
 
-  // cho data này 1 cái aliat name để dễ gọi
-  const { data: profileData, refetch } = useQuery({
-    queryKey: ['profile'],
-    // thằng này cũng như vậy mà cách viết khác
-    // queryFn: () => userApi.getProfile(),
-    queryFn: userApi.getProfile // thằng này cũng là 1 call bakc
-  })
-
-  const profile = profileData?.data.data
-  const updateProfileMutation = useMutation({ mutationFn: userApi.updateProfile })
+  // xem giá trị của avatar
+  const avatar = watch('avatar')
+  console.log('avatar', avatar)
 
   useEffect(() => {
     if (profile) {
@@ -61,18 +96,55 @@ export default function Profile() {
   }, [profile, setValue])
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data)
+    try {
+      let avatarName = avatar
+      if (file) {
+        // cái formData này là của JS nha =))
+        const form = new FormData()
+        form.append('image', file)
+        const uploadRes = await uploadAvatarMutation.mutateAsync(form)
+        console.log(uploadRes.data.data)
 
-    const res = await updateProfileMutation.mutateAsync({
-      ...data,
-      date_of_birth: data.date_of_birth?.toISOString()
-    })
-    setProfile(res.data.data)
-    setProfileToLS(res.data.data)
-    // refresh lại API
-    refetch()
-    toast.success(res.data.message)
+        // Do là ông được ông trả về cái name của cái ảnh, chứ kh phai là url
+        //uploadRes.data.data đây giá trik từ sever trả về
+        avatarName = uploadRes.data.data
+        setValue('avatar', avatarName)
+      }
+      const res = await updateProfileMutation.mutateAsync({
+        ...data,
+        date_of_birth: data.date_of_birth?.toISOString(),
+        avatar: avatarName
+      })
+      setProfile(res.data.data)
+      setProfileToLS(res.data.data)
+      // refresh lại API
+      refetch()
+      toast.success(res.data.message)
+    } catch (error) {
+      console.log(error)
+      if (isAxiosUnprocessableEntityError<ErrorResponse<FormDataError>>(error)) {
+        const formError = error.response?.data.data
+        if (formError) {
+          Object.keys(formError).forEach((key) => {
+            setError(key as keyof FormDataError, {
+              message: formError[key as keyof FormDataError],
+              type: 'Server'
+            })
+          })
+        }
+      }
+    }
   })
+
+  const handleUpload = () => {
+    fileInputRef.current?.click()
+  }
+
+  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // này là 1 cái file list mà chúng ta lấy thì chỉ lấy có 1 file thôi nên là items (0)
+    const fileformLocal = event.target.files?.[0]
+    setFile(fileformLocal)
+  }
 
   return (
     <div className=' pb=10 rounded-sm bg-white px-2 shadow   md:px-7 md:pb-20 '>
@@ -166,13 +238,11 @@ export default function Profile() {
         <div className='flex justify-center md:w-72 md:border-l md:border-l-gray-200'>
           <div className='flex flex-col items-center'>
             <div className='my-5 h-24 w-24'>
-              <img
-                className='h-full w-full rounded-full object-cover'
-                src='https://down-vn.img.susercontent.com/file/vn-11134226-7r98o-luqbzvje8weqe3_tn'
-              />
+              <img src={preViewImage || getAvatarUrl(avatar)} className='h-full w-full rounded-full object-cover' />
             </div>
-            <input className='hidden' type='file' accept='jpg,.jeg,.png' />
+            <input className='hidden' type='file' accept='jpg,.jeg,.png' ref={fileInputRef} onChange={onFileChange} />
             <button
+              onClick={handleUpload}
               type='button'
               className='flex h-10 items-center justify-end rounded-sm border bg-white px-6 text-sm text-gray-600 shadow-sm'
             >
