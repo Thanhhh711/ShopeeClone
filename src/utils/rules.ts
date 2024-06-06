@@ -72,6 +72,15 @@ function testPriceMinMax(this: yup.TestContext<yup.AnyObject>) {
   return price_min !== '' || price_max !== ''
 }
 
+const handleConfirmPasswordYup = (refString: string) => {
+  return yup
+    .string()
+    .required('Passwỏd là bắt buộc')
+    .min(6, 'Độ dài từ 6-160 ký tự')
+    .max(160, 'Độ dài từ 6-160 ký tự')
+    .oneOf([yup.ref(refString)], 'Nhập lại password không khớp ')
+}
+
 //---------------------------Này là chúng ta dùm yup---------------------------------
 export const schema = yup.object({
   email: yup
@@ -85,12 +94,7 @@ export const schema = yup.object({
     .required('Passwỏd là bắt buộc')
     .min(6, 'Độ dài từ 6-160 ký tự')
     .max(160, 'Độ dài từ 6-160 ký tự'),
-  confirm_password: yup
-    .string()
-    .required('Passwỏd là bắt buộc')
-    .min(6, 'Độ dài từ 6-160 ký tự')
-    .max(160, 'Độ dài từ 6-160 ký tự')
-    .oneOf([yup.ref('password')], 'Nhập lại password không khớp '),
+  confirm_password: handleConfirmPasswordYup('password'),
   price_min: yup.string().test({
     name: 'price-not-allowed',
     message: 'Giá không phù hợp',
@@ -113,14 +117,14 @@ export const userSchema = yup.object({
   //  kế thừa ở trên xuống
   password: schema.fields['password'],
   new_password: schema.fields['password'],
-  confirm_password: schema.fields['confirm_password']
+  confirm_password: handleConfirmPasswordYup('new_password')
 })
 
 // export const SchemaLogin = schema.omit(['confirm_password'])
 
 // export type LoginSchema = yup.InferType<typeof schemaLogin>
 
-export type userSchema = yup.InferType<typeof userSchema>
+export type UserSchema = yup.InferType<typeof userSchema>
 
 //  thằng này giúp tạo 1 cái interface mà không cần phải tạo 1 cái interface
 export type Schema = yup.InferType<typeof schema>
