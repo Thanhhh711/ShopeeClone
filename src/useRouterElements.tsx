@@ -14,6 +14,7 @@ import CartLayout from './layouts/CartLayout'
 import UserLayout from './pages/User/layout/UserLayout'
 import ChangPassword from './pages/User/pages/ChangePassword'
 import HistoryPurchase from './pages/User/pages/HistoryPurchase'
+import NotFound from './pages/PageNotFound'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
@@ -114,6 +115,15 @@ export default function useRouterElements() {
       element: (
         <MainLayout>
           <HistoryPurchase />
+        </MainLayout>
+      )
+    },
+    {
+      path: '*',
+      index: true, // để tránh nó kh find được gòi lại rơi vào vòng lặp vô hạn
+      element: (
+        <MainLayout>
+          <NotFound />
         </MainLayout>
       )
     }
