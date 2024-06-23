@@ -1,10 +1,10 @@
 import axios, { AxiosError, AxiosInstance } from 'axios'
 import { toast } from 'react-toastify'
 import { HttpStatusCode } from 'src/constants/HttpStatusCode.enum'
+import config from 'src/constants/config'
+import path from 'src/constants/path'
 import { AuthResponse } from 'src/types/auth.type'
 import { clearLS, getAccessTokenFormLS, saveAccessTokenToLS, setProfileToLS } from './auth'
-import path from 'src/constants/path'
-import config from 'src/constants/config'
 
 class Http {
   // khi mà chúng ta khai báo biến thì chúng ta phải khai nó trong constructor
@@ -25,6 +25,8 @@ class Http {
 
     this.instance.interceptors.request.use(
       (config) => {
+        console.log(config)
+
         if (this.accessToken && config) {
           config.headers.authorization = this.accessToken
           return config
@@ -39,6 +41,8 @@ class Http {
     this.instance.interceptors.response.use(
       // chỗ này đổi thành arf để sử dụng this
       (response) => {
+        console.log(response)
+
         const { url } = response.config
         if (url === path.login || url === path.register) {
           const data = response.data

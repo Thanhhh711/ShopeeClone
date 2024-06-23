@@ -115,9 +115,14 @@ export const userSchema = yup.object({
   address: yup.string().max(160, 'Độ dài tối đa là 160 ký tự'),
   date_of_birth: yup.date().max(new Date(), 'Hãy chọn một ngày trong quá khứ'),
   //  kế thừa ở trên xuống
-  password: schema.fields['password'],
-  new_password: schema.fields['password'],
-  confirm_password: handleConfirmPasswordYup('new_password')
+  password: schema.fields['password'] as yup.StringSchema<string | undefined, yup.AnyObject, undefined, ''>,
+  new_password: schema.fields['password'] as yup.StringSchema<string | undefined, yup.AnyObject, undefined, ''>,
+  confirm_password: handleConfirmPasswordYup('new_password') as yup.StringSchema<
+    string | undefined,
+    yup.AnyObject,
+    undefined,
+    ''
+  >
 })
 
 // export const SchemaLogin = schema.omit(['confirm_password'])

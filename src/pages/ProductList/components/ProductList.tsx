@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import productApi from 'src/apis/product.api'
 import AsideFilter from './AsideFilter'
 import Product from './Product/Product'
@@ -28,7 +28,7 @@ export default function ProductList() {
     //  có nghĩa là ma chuyển trang: thì  thằng data sẽ bi set là undefined, điều này dẫn đến
     //  trang bị giật khi chuyển nên mình sẽ sử dụng thằng này để giữ lại data trước đó tránh bi giật
     staleTime: 3 * 60 * 1000, // phải có thằng này thì( mới show được mấy sản phẩm tương ứng)
-    keepPreviousData: true // hoặc false tùy theo yêu cầu của bạn
+    placeholderData: keepPreviousData // hoặc false tùy theo yêu cầu của bạn
     //  thằng này
   })
 

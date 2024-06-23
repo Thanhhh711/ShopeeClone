@@ -1,13 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
-import { useContext } from 'react'
 
 import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import authApi from 'src/apis/auth.api'
 import Button from 'src/components/Button'
 import Input from 'src/components/Input'
-import { AppContext } from 'src/contexts/app.contexts'
 import { ErrorResponse } from 'src/types/utils.type'
 import { Schema, schema } from 'src/utils/rules'
 import { isAxiosUnprocessableEntityError } from 'src/utils/util'
@@ -19,8 +17,8 @@ type FormData = Pick<Schema, 'email' | 'password'>
 const loginSchema = schema.pick(['email', 'password'])
 
 export default function Login() {
-  const { setIsAuthenticated, setProfile } = useContext(AppContext)
-  const navigate = useNavigate()
+  // const { setIsAuthenticated, setProfile } = useContext(AppContext)
+
   //  đây là những thuộc tính có sẵn ở trong useForm
 
   const {
@@ -40,12 +38,7 @@ export default function Login() {
   const onSubmit = handleSubmit((data) => {
     loginMutation.mutate(data, {
       onSuccess: (data) => {
-        setIsAuthenticated(true)
-        // navigate đươc dùng để điều hướng (in case này là tới thằng /)
-
-        setProfile(data.data.data?.user)
-        // dấu / đại diện trang hiện tại
-        navigate('/')
+        console.log(data)
       },
       onError: (error) => {
         //  khi mà server trả về đó là 1 cái response lỗi nên là dùng generic định dạng lỗi truyền vào

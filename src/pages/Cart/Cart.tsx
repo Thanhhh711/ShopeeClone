@@ -1,10 +1,11 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { current, produce } from 'immer'
-import { keyBy, result } from 'lodash'
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { produce } from 'immer'
+import { keyBy } from 'lodash'
+import { useContext, useEffect, useMemo } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import purchaseApi from 'src/apis/purchase.api'
+import noProduct from 'src/assets/images/no-product.png'
 import Button from 'src/components/Button'
 import QuantityController from 'src/components/QuantityController'
 import path from 'src/constants/path'
@@ -12,7 +13,6 @@ import { purchasesStatus } from 'src/constants/purchase'
 import { AppContext } from 'src/contexts/app.contexts'
 import { Purchase } from 'src/types/purchase.type'
 import { fomatCurrency, generateNameId } from 'src/utils/util'
-import noProduct from 'src/assets/images/no-product.png'
 
 export default function Cart() {
   const { extendedPurchases, setExtendedPurchases } = useContext(AppContext)

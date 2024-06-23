@@ -7,16 +7,15 @@ import noProduct from 'src/assets/images/no-product.png'
 import path from 'src/constants/path'
 import { purchasesStatus } from 'src/constants/purchase'
 import { AppContext } from 'src/contexts/app.contexts'
-import useQueryConfig from 'src/hooks/useQueryConfig'
 import useSearchProducts from 'src/hooks/useSearchProducts'
 import { fomatCurrency } from 'src/utils/util'
-import Popover from '../Popover'
 import NavHeader from '../NavHeader'
+import Popover from '../Popover'
 
 const MAX_PURCHASES = 5
 // Cần nghiên cưu thêm bài 170
 export default function Headers() {
-  const queryConfig = useQueryConfig()
+  //const queryConfig = useQueryConfig()
   // const queryClient = useQueryClient()
   // const { register, handleSubmit } = useForm<FormData>({
   //   defaultValues: {
@@ -30,8 +29,8 @@ export default function Headers() {
   const {
     // thằng này dùng để check nếu người người dùng chưa đăng nhập
     //  thì hiên đăng nhâp
-    isAuthenticated,
-    profile
+    isAuthenticated
+
     // setIsAuthenticated,
     // setProfile,
   } = useContext(AppContext)

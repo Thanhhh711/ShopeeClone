@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { Fragment, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useContext, useEffect, useMemo, useState } from 'react'
 import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form'
 import userApi from 'src/apis/user.api'
 import Button from 'src/components/Button'
@@ -85,7 +85,7 @@ Nhấn submit thì tiến hành upload lên server, nếu upload thành công th
 */
 
 export default function Profile() {
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  //const fileInputRef = useRef<HTMLInputElement>(null)
 
   const { setProfile } = useContext(AppContext)
 
@@ -105,6 +105,7 @@ export default function Profile() {
   })
 
   const profile = profileData?.data.data
+
   const updateProfileMutation = useMutation({ mutationFn: userApi.updateProfile })
 
   const uploadAvatarMutation = useMutation({ mutationFn: userApi.uploadAvatar })

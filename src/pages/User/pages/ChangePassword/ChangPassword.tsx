@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import omit from 'lodash/omit'
-import { FormProvider, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import userApi from 'src/apis/user.api'
 import Button from 'src/components/Button'
@@ -9,6 +9,7 @@ import Input from 'src/components/Input'
 import { ErrorResponse, NoUndefinedField } from 'src/types/utils.type'
 import { UserSchema, userSchema } from 'src/utils/rules'
 import { isAxiosUnprocessableEntityError } from 'src/utils/util'
+import { ObjectSchema } from 'yup'
 
 type FormData = NoUndefinedField<Pick<UserSchema, 'password' | 'new_password' | 'confirm_password'>>
 const passwordSchema = userSchema.pick(['password', 'new_password', 'confirm_password'])
@@ -30,12 +31,10 @@ export default function ChangPassword() {
       new_password: '',
       confirm_password: ''
     },
-    resolver: yupResolver(passwordSchema)
+    resolver: yupResolver(passwordSchema as ObjectSchema<FormData>)
   })
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data)
-
     try {
       const res = await updateProfileMutation.mutateAsync(omit(data, ['confirm_password']))
       toast.success(res.data.message)

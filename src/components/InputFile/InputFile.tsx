@@ -1,5 +1,4 @@
-import React, { useRef, useState } from 'react'
-import { Fragment } from 'react'
+import React, { Fragment, useRef } from 'react'
 import { toast } from 'react-toastify'
 import config from 'src/constants/config'
 
@@ -9,7 +8,7 @@ interface Props {
 export default function InputFile({ onChange }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const [file, setFile] = useState<File>()
+  // const [file, setFile] = useState<File>()
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // này là 1 cái file list mà chúng ta lấy thì chỉ lấy có 1 file thôi nên là items (0)

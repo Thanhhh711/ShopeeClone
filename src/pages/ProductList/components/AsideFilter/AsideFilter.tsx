@@ -1,19 +1,19 @@
 import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import Button from 'src/components/Button'
 
-import path from 'src/constants/path'
-import { Category } from 'src/types/category.type'
-import { QueryConfig } from '../ProductList'
-import classNames from 'classnames'
-import InputNumber from 'src/components/InputNumber'
-import { useForm, Controller } from 'react-hook-form'
-import { schema, Schema } from 'src/utils/rules'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { NoUndefinedField } from 'src/types/utils.type'
-import RatingStart from 'src/pages/RatingStart'
+import classNames from 'classnames'
 import { omit } from 'lodash'
-import { log } from 'console'
+import { Controller, useForm } from 'react-hook-form'
+import InputNumber from 'src/components/InputNumber'
 import InputV2 from 'src/components/InputV2'
+import path from 'src/constants/path'
+import RatingStart from 'src/pages/RatingStart'
+import { Category } from 'src/types/category.type'
+import { NoUndefinedField } from 'src/types/utils.type'
+import { Schema, schema } from 'src/utils/rules'
+import { QueryConfig } from '../ProductList'
+import { ObjectSchema } from 'yup'
 
 interface Props {
   queryConfig: QueryConfig
@@ -51,7 +51,12 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
       price_min: '',
       price_max: ''
     },
-    resolver: yupResolver(priceSchema)
+
+    //yupResoler làm hàm của react hook form
+    // kiểu dữ liệu được sử dụng trong schema là kiểu FormData
+    // (priceSchema as ObjectSchema<FormData>): Trong TypeScript, bạn cần xác định kiểu dữ liệu cho schema khi sử dụng nó với yupResolver.
+    // Trong trường hợp này, bạn đã ép kiểu priceSchema thành ObjectSchema<FormData>, nơi FormData là kiểu dữ liệu của schema.
+    resolver: yupResolver<FormData>(priceSchema as ObjectSchema<FormData>)
     //  việc dùng thằng này giúp ta focus vào price max thui(Được muốn z 185 )
     //    shouldFocusError: false // mún sử dụng thằng forcus này thì bắt buộc sử dụng ref
     //  mà thằng này mặc định là true

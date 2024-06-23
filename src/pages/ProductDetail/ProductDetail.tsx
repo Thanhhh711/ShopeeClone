@@ -16,7 +16,6 @@ import path from 'src/constants/path'
 
 export default function ProductDetail() {
   const { nameId } = useParams()
-
   const id = getIdFromNameId(nameId as string)
 
   const queryClient = useQueryClient()

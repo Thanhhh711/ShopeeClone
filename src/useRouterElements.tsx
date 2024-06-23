@@ -1,20 +1,25 @@
-import { useContext } from 'react'
+import { useContext, lazy, Suspense } from 'react'
 import { Navigate, Outlet, useRoutes } from 'react-router-dom'
 import path from '../src/constants/path'
 import { AppContext } from './contexts/app.contexts'
 import MainLayout from './layouts/MainLayout/MainLayout'
 import RegisterLayout from './layouts/RegisterLayout'
-import Login from './pages/Login'
-import Profile from './pages/User/pages/Profile'
-import Register from './pages/Register'
-import ProductList from './pages/ProductList/components'
-import ProductDetail from './pages/ProductDetail'
-import Cart from './pages/Cart'
+
 import CartLayout from './layouts/CartLayout'
 import UserLayout from './pages/User/layout/UserLayout'
-import ChangPassword from './pages/User/pages/ChangePassword'
-import HistoryPurchase from './pages/User/pages/HistoryPurchase'
-import NotFound from './pages/PageNotFound'
+
+//  mình chơi lazy load có nghĩa là chơi tới đâu tải tới đó
+// thuận lợi là user không cần phải tải nguyên cái component trong lần đầu,
+// do người ta chỉ sử dụng vài trang thoi nên không cần load hết
+const Login = lazy(() => import('./pages/Login'))
+const ProductList = lazy(() => import('./pages/ProductList/components'))
+const Profile = lazy(() => import('./pages/User/pages/Profile'))
+const Register = lazy(() => import('./pages/Register'))
+const ProductDetail = lazy(() => import('./pages/ProductDetail'))
+const Cart = lazy(() => import('./pages/Cart'))
+const ChangePassword = lazy(() => import('./pages/User/pages/ChangePassword'))
+const HistoryPurchase = lazy(() => import('./pages/User/pages/HistoryPurchase'))
+const NotFound = lazy(() => import('./pages/PageNotFound'))
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
@@ -41,7 +46,10 @@ export default function useRouterElements() {
           path: path.login,
           element: (
             <RegisterLayout>
-              <Login />
+              {/* kiểu như đợi login đàng load thì show này ra cho người dùng */}
+              <Suspense fallback={<div>loading</div>}>
+                <Login />
+              </Suspense>
             </RegisterLayout>
           )
         },
@@ -49,7 +57,9 @@ export default function useRouterElements() {
           path: path.register,
           element: (
             <RegisterLayout>
-              <Register />
+              <Suspense>
+                <Register />
+              </Suspense>
             </RegisterLayout>
           )
         }
@@ -64,7 +74,9 @@ export default function useRouterElements() {
           index: true, // để tránh nó kh find được gòi lại rơi vào vòng lặp vô hạn
           element: (
             <CartLayout>
-              <Cart />
+              <Suspense>
+                <Cart />
+              </Suspense>
             </CartLayout>
           )
         },
@@ -74,6 +86,7 @@ export default function useRouterElements() {
             <MainLayout>
               {/*  DO là minh sử dụng Outlet, nên là kho không có children */}
               {/*  */}
+
               <UserLayout />
             </MainLayout>
           ),
@@ -81,11 +94,19 @@ export default function useRouterElements() {
             {
               path: path.profile,
               //  nên là mấy thằng này sẽ được chèn vào chỗ của outlet
-              element: <Profile />
+              element: (
+                <Suspense>
+                  <Profile />
+                </Suspense>
+              )
             },
             {
               path: path.changePassword,
-              element: <ChangPassword />
+              element: (
+                <Suspense>
+                  <ChangePassword />
+                </Suspense>
+              )
             }
           ]
         }
@@ -96,7 +117,9 @@ export default function useRouterElements() {
       index: true, // để tránh nó kh find được gòi lại rơi vào vòng lặp vô hạn
       element: (
         <MainLayout>
-          <ProductDetail />
+          <Suspense>
+            <ProductDetail />
+          </Suspense>
         </MainLayout>
       )
     },
@@ -105,7 +128,9 @@ export default function useRouterElements() {
       index: true, // để tránh nó kh find được gòi lại rơi vào vòng lặp vô hạn
       element: (
         <MainLayout>
-          <ProductList />
+          <Suspense>
+            <ProductList />
+          </Suspense>
         </MainLayout>
       )
     },
@@ -114,7 +139,9 @@ export default function useRouterElements() {
       index: true, // để tránh nó kh find được gòi lại rơi vào vòng lặp vô hạn
       element: (
         <MainLayout>
-          <HistoryPurchase />
+          <Suspense>
+            <HistoryPurchase />
+          </Suspense>
         </MainLayout>
       )
     },
@@ -123,7 +150,9 @@ export default function useRouterElements() {
       index: true, // để tránh nó kh find được gòi lại rơi vào vòng lặp vô hạn
       element: (
         <MainLayout>
-          <NotFound />
+          <Suspense>
+            <NotFound />
+          </Suspense>
         </MainLayout>
       )
     }
