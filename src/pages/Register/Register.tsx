@@ -1,12 +1,15 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
-import { omit } from 'lodash'
+//import { omit } from 'lodash' // không có tính năng tree-shaking
+import omit from 'lodash/omit' // đây là kiểu import trực tiếp
 import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import authApi from 'src/apis/auth.api'
 import Button from 'src/components/Button'
 import Input from 'src/components/Input'
+import path from 'src/constants/path'
 import { AppContext } from 'src/contexts/app.contexts'
 import { ErrorResponse } from 'src/types/utils.type'
 import { schema, Schema } from 'src/utils/rules'
@@ -51,7 +54,8 @@ export default function Register() {
         setIsAuthenticated(true)
         // navigate đươc dùng để điều hướng (in case này là tới thằng /)
         setProfile(data.data.data.user)
-        navigate('/')
+        toast.success(data.data.message)
+        navigate(path.home)
       },
       onError: (error) => {
         console.log('errros:', error)
@@ -113,6 +117,7 @@ export default function Register() {
                 type='password'
                 placeholder='password'
                 className='mt-2'
+                classNameInput='top-[7px]'
                 register={register}
                 errorMessage={errors.password?.message}
                 autoComplete='on'

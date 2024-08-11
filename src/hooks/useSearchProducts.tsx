@@ -12,6 +12,7 @@ type FormData = Pick<Schema, 'name'>
 
 const nameSchema = schema.pick(['name'])
 export default function useSearchProducts() {
+  // thằng đầu tiên là 1 obj search clean
   const queryConfig = useQueryConfig()
   const navigate = useNavigate()
 
@@ -23,6 +24,10 @@ export default function useSearchProducts() {
   })
 
   const onSubmitSearch = handleSubmit((data) => {
+    // config này là gì?
+    // obj clean trỏ vào thuộc tính order có sẵn bên trong hỏi
+    // có sort hong có sort thì loại bỏ cái 2 thuộc tính và loại nó ra
+    // tránh bị mất đi cái trạng thái sort trc đó
     const config = queryConfig.order
       ? omit(
           {
@@ -36,7 +41,7 @@ export default function useSearchProducts() {
           name: data.name
         }
     navigate({
-      pathname: path.profile,
+      pathname: path.home,
       search: createSearchParams(
         //  tại sao chúng ta phải sử dụng omit trong trường hợp này
         //  do là khi mà chúng ta bấm phổ biến thì nó phải sắp xếp từ

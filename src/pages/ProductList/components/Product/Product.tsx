@@ -9,6 +9,8 @@ interface Props {
   product: ProductType
 }
 
+// sản phẩm
+
 export default function Product({ product }: Props) {
   return (
     <Link to={`${path.home}${generateNameId({ name: product.name, id: product._id })}`}>

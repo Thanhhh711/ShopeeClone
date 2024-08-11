@@ -1,11 +1,15 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
+import { useContext } from 'react'
 
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import authApi from 'src/apis/auth.api'
 import Button from 'src/components/Button'
 import Input from 'src/components/Input'
+import path from 'src/constants/path'
+import { AppContext } from 'src/contexts/app.contexts'
 import { ErrorResponse } from 'src/types/utils.type'
 import { Schema, schema } from 'src/utils/rules'
 import { isAxiosUnprocessableEntityError } from 'src/utils/util'
@@ -17,10 +21,10 @@ type FormData = Pick<Schema, 'email' | 'password'>
 const loginSchema = schema.pick(['email', 'password'])
 
 export default function Login() {
-  // const { setIsAuthenticated, setProfile } = useContext(AppContext)
+  const { setIsAuthenticated } = useContext(AppContext)
 
   //  đây là những thuộc tính có sẵn ở trong useForm
-
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -38,7 +42,9 @@ export default function Login() {
   const onSubmit = handleSubmit((data) => {
     loginMutation.mutate(data, {
       onSuccess: (data) => {
-        console.log(data)
+        setIsAuthenticated(true)
+        navigate(path.home)
+        toast.success(data.data.message)
       },
       onError: (error) => {
         //  khi mà server trả về đó là 1 cái response lỗi nên là dùng generic định dạng lỗi truyền vào
@@ -74,7 +80,7 @@ export default function Login() {
                 name='email'
                 type='email'
                 placeholder='email'
-                className='mt-8'
+                className='mt-10'
                 register={register}
                 errorMessage={errors.email?.message}
               />
@@ -82,6 +88,7 @@ export default function Login() {
                 name='password'
                 type='password'
                 placeholder='password'
+                classNameEye='absolute right-[20px] h-5 w-5 cursor-pointer top-[12px]'
                 className='mt-1'
                 register={register}
                 errorMessage={errors.password?.message}
