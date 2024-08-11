@@ -14,6 +14,9 @@ import { purchasesStatus } from 'src/constants/purchase'
 import { toast } from 'react-toastify'
 import path from 'src/constants/path'
 import { useTranslation } from 'react-i18next'
+import { Helmet } from 'react-helmet-async'
+import { convert } from 'html-to-text'
+
 export default function ProductDetail() {
   const { t } = useTranslation('product')
   const { nameId } = useParams()
@@ -158,6 +161,24 @@ export default function ProductDetail() {
     // có product thi mới hiên
 
     <div className='bg-gray-200 py-6'>
+      <Helmet>
+        <title> {product.name}| Shopee Clone</title>
+        <meta
+          name='description'
+          content={convert(product.description, {
+            limits: {
+              ellipsis: '...', // cái này sẽ chèn ... vào cuối
+              maxInputLength: 150 // số chữ được hiện
+            }
+          })}
+        />
+        {/*  cái chỗ content này nếu mà render trên f12 á 
+          nó sẽ là thẻ p ha là thẻ h gì đó, thì nhìn nó rất là ký cục,
+          bởi vậy nên là mình dùng thêm thư viện html to text để biến nó 
+          thành text bình thường 
+        */}
+      </Helmet>
+
       <div className='container'>
         <div className='bg-white p-4 shadow'>
           <div className='grid grid-cols-12 gap-9'>
