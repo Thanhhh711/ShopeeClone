@@ -7,9 +7,16 @@ import { purchasesStatus } from 'src/constants/purchase'
 import { AppContext } from 'src/contexts/app.contexts'
 import { getAvatarUrl } from 'src/utils/util'
 import Popover from '../Popover'
+import { useTranslation } from 'react-i18next'
+import { locales } from 'src/i18n/i18n'
 
 export default function NavHeader() {
-  // useQueryClinet này nó giông như là useContext vậy á
+  // cái thằng i18n này nó sẽ tham chíu đến i18n.use(initReactI18next).init trong file i18n
+  const { i18n } = useTranslation()
+  // chỗ này có lỗi là do nó không biết có chắc chắn nó là kiểu của locales hong
+  // nên là mình ếp kiểu nó
+  const currentLanguage = locales[i18n.language as keyof typeof locales]
+  // useQueryClinet này nó giông như là useContext  vậy á
   //  nếu chúng ta dùng như này thì nó giống như là sử dụng queryCLient bên thằng main vậy á
   const queryClient = useQueryClient()
   const {
@@ -36,6 +43,13 @@ export default function NavHeader() {
     logoutMutation.mutate()
   }
 
+  const changeLanguage = (lng: 'en' | 'vi') => {
+    // lng là gì
+    //  là tất cả các key có trong rescouce của file inn18
+
+    i18n.changeLanguage(lng)
+  }
+
   return (
     <div className='container'>
       {/*  qua trái */}
@@ -46,8 +60,12 @@ export default function NavHeader() {
           renderPopover={
             <div className='bg-white relative shadow-md rounded-sm border border-gray-200'>
               <div className='flex flex-col py-2 pr-28 pl-3'>
-                <button className='button py-2 px-3 hover:text-orange'>Tiếng Việt</button>
-                <button className='button py-2 px-3 hover:text-orange mt-2'>English</button>
+                <button onClick={() => changeLanguage('vi')} className='button py-2 px-3 hover:text-orange'>
+                  Tiếng Việt
+                </button>
+                <button onClick={() => changeLanguage('en')} className='button py-2 px-3 hover:text-orange mt-2'>
+                  English
+                </button>
               </div>
             </div>
           }
@@ -69,7 +87,7 @@ export default function NavHeader() {
           </svg>
 
           {/*  mặc định mới vào là tiếng việt */}
-          <div className='mx-1'>Tiếng Việt</div>
+          <div className='mx-1'>{currentLanguage}</div>
           {/*  mũi tên */}
           <svg
             xmlns='http://www.w3.org/2000/svg'

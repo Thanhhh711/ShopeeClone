@@ -14,7 +14,7 @@ import { NoUndefinedField } from 'src/types/utils.type'
 import { Schema, schema } from 'src/utils/rules'
 import { QueryConfig } from '../ProductList'
 import { ObjectSchema } from 'yup'
-
+import { useTranslation } from 'react-i18next'
 interface Props {
   queryConfig: QueryConfig
   categories: Category[]
@@ -34,6 +34,8 @@ type FormData = NoUndefinedField<Pick<Schema, 'price_max' | 'price_min'>>
 const priceSchema = schema.pick(['price_min', 'price_max'])
 
 export default function AsideFilter({ queryConfig, categories }: Props) {
+  const { t } = useTranslation('home')
+
   //  dùng react.hookform nó chỉ validate cái input mà chúng ta nhập thôi
   const { category } = queryConfig
   //  tại sao dùng useForm do mình đâu có lấy từ thằng register đâu
@@ -102,7 +104,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
             </g>
           </g>
         </svg>
-        Tất cả danh mục
+        {t('aside filter.all categories')}
       </Link>
       {/*  cái gạch ngang  */}
       <div className='bg-gray-300 h-[1px] my-4' />
@@ -158,7 +160,8 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
             />
           </g>
         </svg>
-        Bộ lọc tìm kíếm
+        {/*  thằng này được tham chiếu từ translation */}
+        {t('aside filter.filter search')}
       </Link>
       {/*  đây là đường kẻ ngang */}
       <div className='bg-gray-300 h-[1px] my-4' />
