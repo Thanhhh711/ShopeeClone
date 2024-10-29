@@ -120,22 +120,22 @@ export default function Register() {
 
               <Input
                 name='password'
-                type='password'
-                placeholder='password'
-                className='mt-2'
-                classNameInput='top-[7px]'
                 register={register}
+                type='password'
+                className='mt-2'
+                classNameEye='absolute right-[5px] h-5 w-5 cursor-pointer top-[12px]'
                 errorMessage={errors.password?.message}
+                placeholder='Password'
                 autoComplete='on'
               />
-
               <Input
                 name='confirm_password'
-                type='password'
-                placeholder='Confirm_password'
-                className='mt-2'
                 register={register}
+                type='password'
+                className='mt-2'
+                classNameEye='absolute right-[5px] h-5 w-5 cursor-pointer top-[12px]'
                 errorMessage={errors.confirm_password?.message}
+                placeholder='Confirm Password'
                 autoComplete='on'
               />
               <div className='mt-2'>

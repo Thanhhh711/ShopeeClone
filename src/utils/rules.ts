@@ -91,7 +91,7 @@ export const schema = yup.object({
     .max(160, 'Độ dài từ 5-160 ký tự'),
   password: yup
     .string()
-    .required('Passwỏd là bắt buộc')
+    .required('Password là bắt buộc')
     .min(6, 'Độ dài từ 6-160 ký tự')
     .max(160, 'Độ dài từ 6-160 ký tự'),
   confirm_password: handleConfirmPasswordYup('password'),

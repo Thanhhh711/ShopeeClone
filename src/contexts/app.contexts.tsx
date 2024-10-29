@@ -13,26 +13,32 @@ interface AppContextInterface {
   reset: () => void
 }
 
-// thằng này nó có thử lúc mà cái App được khởi taohn
-const initialAppContext: AppContextInterface = {
+export const getInitialAppContext: () => AppContextInterface = () => ({
   isAuthenticated: Boolean(getAccessTokenFormLS()),
   setIsAuthenticated: () => null,
   profile: getProfileFromLS(),
-  // khi đăng nhập thành công thì set lại cái profile này từ null thành tên người
   setProfile: () => null,
   extendedPurchases: [],
   setExtendedPurchases: () => null,
   reset: () => null
-}
+})
+
+const initialAppContext = getInitialAppContext()
 
 export const AppContext = createContext<AppContextInterface>(initialAppContext)
 
-export const AppProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(initialAppContext.isAuthenticated)
+export const AppProvider = ({
+  children,
+  defaultValue = initialAppContext
+}: {
+  children: React.ReactNode
+  defaultValue?: AppContextInterface
+}) => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(defaultValue.isAuthenticated)
   //được dùng để lưu lại sản phẩm khi thoát khỏi trang cart, chỉ bị mất khi F5 trang
-  const [extendedPurchases, setExtendedPurchases] = useState<ExtendedPurchase[]>(initialAppContext.extendedPurchases)
+  const [extendedPurchases, setExtendedPurchases] = useState<ExtendedPurchase[]>(defaultValue.extendedPurchases)
 
-  const [profile, setProfile] = useState<User | null>(initialAppContext.profile)
+  const [profile, setProfile] = useState<User | null>(defaultValue.profile)
 
   const reset = () => {
     // chúng ta không nên sử dụng initialAppContext để reset

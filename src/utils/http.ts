@@ -24,7 +24,7 @@ import { isAxiosExpiredTokenError } from './util'
 // nên là mình thêm setTimeOut set là 10s, sau 10s thì hả null
 // đều này làm cho tránh bị gọi lại 2 lần và tiết kiệm được thời gian và tránh bug
 
-class Http {
+export class Http {
   // khi mà chúng ta khai báo biến thì chúng ta phải khai nó trong constructor
   instance: AxiosInstance
   private accessToken: string

@@ -70,7 +70,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
     console.log(data)
 
     navigate({
-      pathname: path.profile,
+      pathname: path.home,
       search: createSearchParams({
         ...queryConfig,
         price_min: data.price_min,
@@ -83,14 +83,14 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
     reset()
 
     navigate({
-      pathname: path.profile,
+      pathname: path.home,
       search: createSearchParams(omit(queryConfig, ['price_min', 'price_max', 'rating_filter', 'category'])).toString()
     })
   }
 
   return (
     <div className='py-4'>
-      <Link to={path.profile} className={classNames('flex items-center font-bold', { 'text-orange': !category })}>
+      <Link to={path.home} className={classNames('flex items-center font-bold', { 'text-orange': !category })}>
         <svg viewBox='0 0 12 10' className='mr-3 h-4 w-3 fill-current'>
           <g fillRule='evenodd' stroke='none' strokeWidth={1}>
             <g transform='translate(-373 -208)'>
@@ -142,7 +142,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
         })}
       </ul>
 
-      <Link to={path.profile} className='flex items-center font-bold mt-4 uppercase'>
+      <Link to={path.home} className='flex items-center font-bold mt-4 uppercase'>
         <svg
           enable-background='new 0 0 15 15'
           viewBox='0 0 15 15'
@@ -170,7 +170,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
 
         <form className='mt-2' onSubmit={onSubmit}>
           <div className='flex items-start'>
-            {/* <Controller
+            <Controller
               control={control}
               name='price_min'
               //  filed là đối tương chứa thông tin ma đến trường dữ liệu Controller đang điều kiển
@@ -188,7 +188,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
                     {...field}
                     // value={field.value}
                     // ref={field.ref}
-                    onChange={(event) => {
+                    onChange={(event: any) => {
                       field.onChange(event)
                       // nếu chúng ta dùng trigger kiểu này
                       // trigger() // thì nó sẽ validate hết cái form của chúng ta
@@ -202,9 +202,9 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
                   />
                 )
               }}
-            /> */}
+            />
 
-            <InputV2
+            {/* <InputV2
               // bắt buộc sử dụng V2 phải truyền control của ReactHookForm vào
               // control lấy đâu ra từ react hook Form
               control={control}
@@ -220,7 +220,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
                 //
                 trigger('price_max') // z là nó chỉ validate đến thằng pricemaxx
               }}
-            />
+            /> */}
 
             <div className='mt-1 text-red-600 min-h-[1.25rem] text-sm text-center'>{errors.price_min?.message}</div>
 
@@ -242,7 +242,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
                     {...field}
                     // value={field.value}
                     // ref={field.ref}
-                    onChange={(event) => {
+                    onChange={(event: any) => {
                       field.onChange(event)
                       // nếu chúng ta dùng trigger kiểu này
                       // trigger() // thì nó sẽ validate hết cái form của chúng ta
@@ -254,21 +254,21 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
               }}
             />
           </div>
+          <div className='mt-1 min-h-[1.25rem] text-center text-sm text-red-600'>{errors.price_min?.message}</div>
           <Button className='w-full p-2 uppercase bg-orange text-white text-sm hover:bg-orange/80 flex justify-center items-center'>
             Áp dụng
           </Button>
         </form>
       </div>
-
+      <div className='my-4 h-[1px] bg-gray-300' />
       <div className='text-sm'>Đánh giá </div>
-
       <RatingStart queryConfig={queryConfig} />
       <div className='bg-gray-300 h-[1px] my-4' />
 
       <div
+        role='button'
         onClick={handleRemoveAll}
         className='w-full p-2 uppercase bg-orange text-white text-sm hover:bg-orange/80 flex justify-center items-center'
-        role='button'
         aria-hidden='true'
       >
         Xóa tất cả
